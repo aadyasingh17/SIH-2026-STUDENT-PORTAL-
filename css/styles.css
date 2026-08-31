@@ -1,0 +1,296 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* ========================================================= */
+/* DESIGN SYSTEM VARIABLES                                   */
+/* ========================================================= */
+:root {
+  --qz-bg: #090E0C;           
+  --qz-surface: #111A15;      
+  --qz-primary: #00FF66;      
+  --qz-primary-hover: #00CC52;
+  --qz-primary-light: rgba(0, 255, 102, 0.12);
+  
+  --qz-text-main: #E2E8F0;    
+  --qz-text-muted: #829A8E;   
+  --qz-border: #1E2D24;       
+  --qz-border-hover: #2D4336;
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+/* ========================================================= */
+/* BASE / RESET                                              */
+/* ========================================================= */
+* { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+}
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background-color: var(--qz-bg);
+  color: var(--qz-text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================================================= */
+/* GLOBAL HEADER                                             */
+/* ========================================================= */
+header {
+  background: var(--qz-surface);
+  border-bottom: 1px solid var(--qz-border);
+  padding: 16px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+}
+
+.brand-group { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  cursor: pointer; 
+}
+
+.brand-logo {
+  width: 36px; 
+  height: 36px; 
+  background: var(--qz-primary); 
+  border-radius: 10px;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  font-weight: 900; 
+  color: #000; 
+  font-size: 1.2rem;
+}
+
+.brand-name { 
+  font-size: 1.4rem; 
+  font-weight: 900; 
+  color: var(--qz-primary); 
+  letter-spacing: -0.04em; 
+}
+
+/* ========================================================= */
+/* BUTTONS & CARDS                                           */
+/* ========================================================= */
+.btn {
+  font-family: inherit; 
+  font-weight: 700; 
+  font-size: 0.9rem;
+  padding: 10px 20px; 
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent; 
+  cursor: pointer; 
+  transition: all 0.15s;
+  display: inline-flex; 
+  align-items: center; 
+  gap: 8px; 
+  justify-content: center;
+}
+
+.btn:active { 
+  transform: scale(0.97); 
+}
+
+.btn-primary { 
+  background: var(--qz-primary); 
+  color: #000; 
+  font-weight: 800; 
+}
+
+.btn-primary:hover { 
+  background: var(--qz-primary-hover); 
+}
+
+.btn-outline { 
+  background: transparent; 
+  border-color: var(--qz-border); 
+  color: var(--qz-text-main); 
+}
+
+.btn-outline:hover { 
+  border-color: var(--qz-primary); 
+  color: var(--qz-primary); 
+}
+
+.card { 
+  background: var(--qz-surface); 
+  border: 1px solid var(--qz-border); 
+  border-radius: var(--radius-lg); 
+  padding: 24px; 
+  box-shadow: var(--shadow-card); 
+  margin-bottom: 20px;
+}
+
+/* ========================================================= */
+/* MAIN ROUTER & LAYOUT CONTAINER                            */
+/* ========================================================= */
+.app-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-view { 
+  display: none; 
+  width: 100%; 
+  flex: 1; 
+}
+
+.main-view.active { 
+  display: block; 
+  animation: fadeIn 0.3s ease; 
+}
+
+@keyframes fadeIn { 
+  from { opacity: 0; } 
+  to { opacity: 1; } 
+}
+
+/* ========================================================= */
+/* FLOATING MODAL & BLUR OVERLAY                             */
+/* ========================================================= */
+.modal-overlay {
+  position: fixed;
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%;
+  background: rgba(9, 14, 12, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.active { 
+  display: flex; 
+  animation: modalFadeIn 0.2s ease; 
+}
+
+@keyframes modalFadeIn { 
+  from { opacity: 0; transform: scale(0.95); } 
+  to { opacity: 1; transform: scale(1); } 
+}
+
+.modal-card {
+  background: var(--qz-surface);
+  border: 1px solid var(--qz-border);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 440px;
+  padding: 32px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+.modal-close {
+  position: absolute; 
+  top: 16px; 
+  right: 20px;
+  background: none; 
+  border: none; 
+  color: var(--qz-text-muted);
+  font-size: 1.5rem; 
+  cursor: pointer;
+}
+
+.modal-close:hover { 
+  color: var(--qz-primary); 
+}
+
+/* ========================================================= */
+/* FORMS & ROLE TOGGLE BUTTONS                               */
+/* ========================================================= */
+.role-selector {
+  display: flex; 
+  gap: 8px; 
+  background: var(--qz-bg);
+  padding: 4px; 
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--qz-border); 
+  margin-bottom: 20px;
+}
+
+.role-btn {
+  flex: 1; 
+  padding: 8px; 
+  text-align: center; 
+  font-size: 0.8rem;
+  font-weight: 700; 
+  color: var(--qz-text-muted); 
+  border: none;
+  background: transparent; 
+  border-radius: 6px; 
+  cursor: pointer;
+}
+
+.role-btn.active { 
+  background: var(--qz-primary-light); 
+  color: var(--qz-primary); 
+}
+
+.form-group { 
+  margin-bottom: 16px; 
+  text-align: left; 
+}
+
+.form-group label { 
+  display: block; 
+  font-size: 0.8rem; 
+  font-weight: 700; 
+  color: var(--qz-text-muted); 
+  margin-bottom: 6px; 
+  text-transform: uppercase; 
+}
+
+.input-field {
+  width: 100%; 
+  padding: 12px 14px; 
+  background: var(--qz-bg);
+  color: var(--qz-text-main); 
+  border: 1px solid var(--qz-border);
+  border-radius: var(--radius-sm); 
+  font-size: 0.95rem; 
+  font-family: inherit; 
+  outline: none;
+}
+
+.input-field:focus { 
+  border-color: var(--qz-primary); 
+}
+
+/* ========================================================= */
+/* GLOBAL FOOTER                                             */
+/* ========================================================= */
+footer {
+  background: var(--qz-surface);
+  border-top: 1px solid var(--qz-border);
+  padding: 24px 32px;
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  flex-wrap: wrap; 
+  gap: 16px; 
+  margin-top: auto;
+}
+
+footer p { 
+  font-size: 0.85rem; 
+  color: var(--qz-text-muted); 
+}
