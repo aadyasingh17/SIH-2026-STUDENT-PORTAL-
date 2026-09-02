@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillBridge | University-to-Industry Placement Engine</title>
+  
+  <!-- Phosphor Icons CDN -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <!-- External Global CSS Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- GLOBAL HEADER -->
+  <header>
+    <div class="brand-group" onclick="navigateTo('view-home')">
+      <div class="brand-logo">Q</div>
+      <div class="brand-name">SkillBridge</div>
+    </div>
+    
+    <div id="header-auth-btns" style="display: flex; gap: 12px;">
+      <button class="btn btn-outline" onclick="openModal('login-modal')">Log in</button>
+      <button class="btn btn-primary" onclick="openModal('signup-modal')">Sign up</button>
+    </div>
+  </header>
+
+  <!-- APP BODY CONTAINERS -->
+  <div class="app-body">
+
+    <!-- HOME VIEW (Developer 1 Core Page) -->
+    <main id="view-home" class="main-view active">
+      <div style="padding: 100px 24px; text-align: center; max-width: 900px; margin: 0 auto;">
+        <h1 style="font-size: 3.5rem; font-weight: 900; letter-spacing: -0.04em; margin-bottom: 24px; line-height: 1.1;">
+          The Ultimate <span style="color: var(--qz-primary);">Academia-Industry</span> Placement Engine.
+        </h1>
+        <p style="font-size: 1.2rem; color: var(--qz-text-muted); margin-bottom: 40px; font-weight: 500;">
+          A real-time unified platform for students, universities, and corporate recruiters to manage academics, verify skills, and streamline campus hiring workflows.
+        </p>
+        <div style="display: flex; gap: 16px; justify-content: center;">
+          <button class="btn btn-primary" style="font-size: 1.1rem; padding: 14px 32px;" onclick="openModal('signup-modal')">Get Started</button>
+          <button class="btn btn-outline" style="font-size: 1.1rem; padding: 14px 32px;" onclick="openModal('login-modal')">Explore Portal</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- STUDENT PORTAL CONTAINER (Developer 2 Works Here) -->
+    <main id="view-student" class="main-view">
+      <div style="padding: 80px 24px; text-align: center;">
+        <h2 style="color: var(--qz-primary); font-size: 2.2rem; font-weight: 800;">Student Workspace Container Active</h2>
+        <!-- <p style="color: var(--qz-text-muted); margin-top: 12px; font-size: 1rem;">Developer 2 will inject their sidebar navigation, attendance tables, and placement drive trackers into this view.</p> -->
+        <button class="btn btn-outline" style="margin-top: 24px;" onclick="navigateTo('view-home')">Return to Home</button>
+      </div>
+    </main>
+
+    <!-- COLLEGE ADMIN PORTAL CONTAINER (Developer 3 Works Here) -->
+    <main id="view-college" class="main-view">
+      <div style="padding: 80px 24px; text-align: center;">
+        <h2 style="color: var(--qz-primary); font-size: 2.2rem; font-weight: 800;">College Management Container Active</h2>
+        <!-- <p style="color: var(--qz-text-muted); margin-top: 12px; font-size: 1rem;">Developer 3 will inject university administration analytics, student verification tables, and drive controls into this view.</p> -->
+        <button class="btn btn-outline" style="margin-top: 24px;" onclick="navigateTo('view-home')">Return to Home</button>
+      </div>
+    </main>
+
+    <!-- COMPANY RECRUITER PORTAL CONTAINER (Developer 3 Works Here) -->
+    <main id="view-company" class="main-view">
+      <div style="padding: 80px 24px; text-align: center;">
+        <h2 style="color: var(--qz-primary); font-size: 2.2rem; font-weight: 800;">Company Hiring Container Active</h2>
+        <!-- <p style="color: var(--qz-text-muted); margin-top: 12px; font-size: 1rem;">Developer 3 will inject recruiter job postings, candidate filtering tables, and interview schedule views into this view.</p> -->
+        <button class="btn btn-outline" style="margin-top: 24px;" onclick="navigateTo('view-home')">Return to Home</button>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- FLOATING LOGIN MODAL -->
+  <div id="login-modal" class="modal-overlay">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeModal('login-modal')">&times;</button>
+      <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 6px;">Welcome Back</h2>
+      <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 20px;">Select your account type to log in.</p>
+
+      <div class="role-selector" id="login-role-selector">
+        <button class="role-btn active" id="login-btn-student" onclick="setRole('student', 'login')">Student</button>
+        <button class="role-btn" id="login-btn-college" onclick="setRole('college', 'login')">College</button>
+        <button class="role-btn" id="login-btn-company" onclick="setRole('company', 'login')">Company</button>
+      </div>
+
+      <form onsubmit="handleFormSubmit(event, 'Login')">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" class="input-field" placeholder="name@domain.com" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" class="input-field" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Log In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- FLOATING SIGNUP MODAL -->
+  <div id="signup-modal" class="modal-overlay">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeModal('signup-modal')">&times;</button>
+      <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 6px;">Create Account</h2>
+      <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 20px;">Choose your role to get started.</p>
+
+      <div class="role-selector" id="signup-role-selector">
+        <button class="role-btn active" id="signup-btn-student" onclick="setRole('student', 'signup')">Student</button>
+        <button class="role-btn" id="signup-btn-college" onclick="setRole('college', 'signup')">College</button>
+        <button class="role-btn" id="signup-btn-company" onclick="setRole('company', 'signup')">Company</button>
+      </div>
+
+      <form onsubmit="handleFormSubmit(event, 'Registration')">
+        <div class="form-group">
+          <label id="signup-name-label">Full Name</label>
+          <input type="text" id="signup-name-input" class="input-field" placeholder="e.g. Rahul Verma" required />
+        </div>
+        <div class="form-group">
+          <label>Official Email</label>
+          <input type="email" class="input-field" placeholder="name@domain.com" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" class="input-field" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Sign Up</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- GLOBAL FOOTER -->
+  <footer>
+    <p>© 2026 SkillBridge Platform Inc. All rights reserved.</p>
+    <div style="display: flex; gap: 16px;">
+      <a href="#" style="color: var(--qz-text-muted); text-decoration: none; font-size: 0.85rem;">Privacy Policy</a>
+      <a href="#" style="color: var(--qz-text-muted); text-decoration: none; font-size: 0.85rem;">Terms of Service</a>
+      <a href="#" style="color: var(--qz-text-muted); text-decoration: none; font-size: 0.85rem;">Support</a>
+    </div>
+  </footer>
+
+  <!-- External JavaScript Router & App Logic -->
+  <script src="js/app.js"></script>
+</body>
+</html>
