@@ -20,9 +20,14 @@
       <div class="brand-name">SkillBridge</div>
     </div>
     
-    <div id="header-auth-btns" style="display: flex; gap: 12px;">
+    <div id="header-auth-btns" style="display: flex; gap: 12px; align-items: center;">
       <button class="btn btn-outline" onclick="openModal('login-modal')">Log in</button>
       <button class="btn btn-primary" onclick="openModal('signup-modal')">Sign up</button>
+    </div>
+
+    <div id="header-user-menu" style="display: none; align-items: center; gap: 16px;">
+      <span id="header-user-email" style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 500;"></span>
+      <button class="btn btn-outline" style="padding: 8px 16px;" onclick="handleLogout()">Log out</button>
     </div>
   </header>
 
@@ -47,10 +52,13 @@
 
     <!-- STUDENT PORTAL CONTAINER (Developer 2 Works Here) -->
     <main id="view-student" class="main-view">
-      <div style="padding: 80px 24px; text-align: center;">
+      <div style="padding: 80px 24px; text-align: center; max-width: 600px; margin: 0 auto;">
         <h2 style="color: var(--qz-primary); font-size: 2.2rem; font-weight: 800;">Student Workspace Container Active</h2>
-        <!-- <p style="color: var(--qz-text-muted); margin-top: 12px; font-size: 1rem;">Developer 2 will inject their sidebar navigation, attendance tables, and placement drive trackers into this view.</p> -->
-        <button class="btn btn-outline" style="margin-top: 24px;" onclick="navigateTo('view-home')">Return to Home</button>
+        <p id="student-welcome-msg" style="color: var(--qz-text-muted); margin-top: 12px; font-size: 1rem;"></p>
+        <div style="display: flex; gap: 12px; justify-content: center; margin-top: 24px;">
+          <button class="btn btn-outline" onclick="navigateTo('view-home')">Return to Home</button>
+          <button class="btn btn-primary" onclick="handleLogout()">Log Out</button>
+        </div>
       </div>
     </main>
 
@@ -87,16 +95,20 @@
         <button class="role-btn" id="login-btn-company" onclick="setRole('company', 'login')">Company</button>
       </div>
 
-      <form onsubmit="handleFormSubmit(event, 'Login')">
+      <!-- Status / Error Messages -->
+      <div id="login-error" style="display: none; color: #ff6b6b; background: rgba(255, 107, 107, 0.12); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.85rem; margin-bottom: 16px;"></div>
+      <div id="login-info" style="display: none; color: var(--qz-primary); background: var(--qz-primary-light); border: 1px solid var(--qz-primary); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.85rem; margin-bottom: 16px;"></div>
+
+      <form id="login-form" onsubmit="handleLogin(event)">
         <div class="form-group">
           <label>Email Address</label>
-          <input type="email" class="input-field" placeholder="name@domain.com" required />
+          <input type="email" id="login-email" class="input-field" placeholder="name@domain.com" required />
         </div>
         <div class="form-group">
           <label>Password</label>
-          <input type="password" class="input-field" placeholder="••••••••" required />
+          <input type="password" id="login-password" class="input-field" placeholder="••••••••" required />
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Log In</button>
+        <button type="submit" id="login-submit-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Log In</button>
       </form>
     </div>
   </div>
@@ -114,20 +126,24 @@
         <button class="role-btn" id="signup-btn-company" onclick="setRole('company', 'signup')">Company</button>
       </div>
 
-      <form onsubmit="handleFormSubmit(event, 'Registration')">
+      <!-- Status / Error Messages -->
+      <div id="signup-error" style="display: none; color: #ff6b6b; background: rgba(255, 107, 107, 0.12); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.85rem; margin-bottom: 16px;"></div>
+      <div id="signup-info" style="display: none; color: var(--qz-primary); background: var(--qz-primary-light); border: 1px solid var(--qz-primary); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.85rem; margin-bottom: 16px;"></div>
+
+      <form id="signup-form" onsubmit="handleSignup(event)">
         <div class="form-group">
           <label id="signup-name-label">Full Name</label>
           <input type="text" id="signup-name-input" class="input-field" placeholder="e.g. Rahul Verma" required />
         </div>
         <div class="form-group">
           <label>Official Email</label>
-          <input type="email" class="input-field" placeholder="name@domain.com" required />
+          <input type="email" id="signup-email" class="input-field" placeholder="name@domain.com" required />
         </div>
         <div class="form-group">
           <label>Password</label>
-          <input type="password" class="input-field" placeholder="••••••••" required />
+          <input type="password" id="signup-password" class="input-field" placeholder="••••••••" minlength="6" required />
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Sign Up</button>
+        <button type="submit" id="signup-submit-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Sign Up</button>
       </form>
     </div>
   </div>
@@ -141,6 +157,12 @@
       <a href="#" style="color: var(--qz-text-muted); text-decoration: none; font-size: 0.85rem;">Support</a>
     </div>
   </footer>
+
+  <!-- Supabase CDN Client Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Centralized Supabase Client Instance -->
+  <script src="js/supabaseClient.js"></script>
 
   <!-- External JavaScript Router & App Logic -->
   <script src="js/app.js"></script>
