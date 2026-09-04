@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillBridge | University-to-Industry Placement Engine</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    /* ========================================================= */
+    /* QUIZLET-INSPIRED DESIGN SYSTEM                            */
+    /* ========================================================= */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    :root {
+      --qz-bg: #F6F7FB;
+      --qz-surface: #FFFFFF;
+      --qz-primary: #4255FF;
+      --qz-primary-hover: #2E3FD6;
+      --qz-primary-light: #ECEEFE;
+      --qz-text-main: #2E3856;
+      --qz-text-muted: #646F90;
+      --qz-border: #E6E9F2;
+      --qz-border-hover: #D0D5E5;
+      
+      --qz-green: #18AE79; --qz-green-light: #E7F7F1;
+      --qz-amber: #FF9838; --qz-amber-light: #FFF5EC;
+      --qz-rose: #FF5E7E; --qz-rose-light: #FFEBF0;
+      --qz-cyan: #22C3D6; --qz-cyan-light: #E6F8FA;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 2px 8px rgba(46, 56, 86, 0.04);
+      --shadow-card: 0 4px 16px rgba(46, 56, 86, 0.08);
+      
+      --sidebar-width: 280px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background-color: var(--qz-bg);
+      color: var(--qz-text-main);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ========================================================= */
+    /* GLOBAL HEADER & COMPONENTS                                */
+    /* ========================================================= */
+    header {
+      background: var(--qz-surface);
+      border-bottom: 2px solid var(--qz-border);
+      padding: 12px 24px;
+      flex-shrink: 0;
+      z-index: 1000;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .brand-group { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .brand-logo {
+      width: 36px; height: 36px; background: var(--qz-primary); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; color: #fff; font-size: 1.2rem;
+    }
+    .brand-name { font-size: 1.4rem; font-weight: 900; color: var(--qz-primary); letter-spacing: -0.04em; }
+
+    .btn {
+      font-family: inherit; font-weight: 700; font-size: 0.9rem;
+      padding: 10px 20px; border-radius: var(--radius-sm);
+      border: 2px solid transparent; cursor: pointer; transition: all 0.15s;
+      display: inline-flex; align-items: center; gap: 8px; justify-content: center;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--qz-primary); color: #fff; }
+    .btn-primary:hover { background: var(--qz-primary-hover); }
+    .btn-outline { background: var(--qz-surface); border-color: var(--qz-border); color: var(--qz-text-main); }
+    .btn-outline:hover { border-color: var(--qz-border-hover); box-shadow: var(--shadow-sm); }
+    .btn-danger { background: var(--qz-rose-light); color: var(--qz-rose); border-color: transparent; }
+    
+    .tag { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; }
+
+    .card { background: var(--qz-surface); border: 2px solid var(--qz-border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-card); margin-bottom: 20px;}
+    .input-field { width: 100%; padding: 12px 16px; border: 2px solid var(--qz-border); border-radius: var(--radius-sm); font-size: 0.95rem; font-family: inherit; outline: none; margin-top: 6px; margin-bottom: 16px;}
+    .input-field:focus { border-color: var(--qz-primary); }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 16px; text-align: left; border-bottom: 2px solid var(--qz-border); font-size: 0.95rem; }
+    th { color: var(--qz-text-muted); font-size: 0.8rem; text-transform: uppercase; font-weight: 800; }
+
+    /* ========================================================= */
+    /* LAYOUT ROUTING                                            */
+    /* ========================================================= */
+    .main-view { display: none; flex: 1; overflow: hidden; }
+    .main-view.active { display: flex; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .portal-layout { display: flex; width: 100%; height: 100%; }
+    
+    .sidebar {
+      width: var(--sidebar-width); background: var(--qz-surface);
+      border-right: 2px solid var(--qz-border); overflow-y: auto;
+      padding: 20px 16px; flex-shrink: 0;
+    }
+    .sidebar::-webkit-scrollbar { width: 6px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--qz-border); border-radius: 10px; }
+
+    .sidebar-section { margin-bottom: 24px; }
+    .sidebar-label { font-size: 0.7rem; font-weight: 800; color: var(--qz-text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 8px 12px; }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+      border-radius: var(--radius-sm); color: var(--qz-text-muted);
+      font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-bottom: 2px;
+    }
+    .sidebar-link i { font-size: 1.2rem; }
+    .sidebar-link:hover { color: var(--qz-text-main); background: var(--qz-bg); }
+    .sidebar-link.active { background: var(--qz-primary-light); color: var(--qz-primary); }
+
+    .portal-content { flex: 1; padding: 32px 40px; overflow-y: auto; background: var(--qz-bg); }
+    .sub-view { display: none; animation: slideUp 0.3s ease; }
+    .sub-view.active { display: block; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Grids & Misc */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; }
+    .progress-track { width: 100%; height: 10px; background: var(--qz-bg); border-radius: 99px; overflow: hidden; margin-top: 8px; border: 1px solid var(--qz-border); }
+    .progress-fill { height: 100%; border-radius: 99px; }
+    
+    .timeline-item { position: relative; padding-left: 20px; margin-bottom: 20px; border-left: 2px solid var(--qz-border); }
+    .timeline-item::before { content: ''; position: absolute; left: -7px; top: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--qz-surface); border: 2px solid var(--qz-primary); }
+  </style>
+
+  <script>
+    // Top-Level Navigation
+    function navigateTo(viewId) {
+      document.querySelectorAll('.main-view').forEach(v => v.classList.remove('active'));
+      document.getElementById(viewId).classList.add('active');
+
+      const authBtns = document.getElementById('header-auth-btns');
+      const userProfile = document.getElementById('header-user-profile');
+      
+      if (viewId === 'view-home' || viewId === 'view-login') {
+        authBtns.style.display = 'flex'; userProfile.style.display = 'none';
+      } else {
+        authBtns.style.display = 'none'; userProfile.style.display = 'flex';
+      }
+    }
+
+    function handleLogin(role, portalId) {
+      document.getElementById('user-profile-name').innerText = role;
+      navigateTo(portalId);
+      // Auto-click the first tab of the portal
+      document.querySelector(`#${portalId} .sidebar-link`).click();
+    }
+
+    // Sidebar Tab Switching
+    function switchInnerTab(portalPrefix, tabName, clickedBtn) {
+      const portal = document.getElementById(`view-${portalPrefix}`);
+      portal.querySelectorAll('.sub-view').forEach(v => v.classList.remove('active'));
+      portal.querySelectorAll('.sidebar-link').forEach(btn => btn.classList.remove('active'));
+      
+      const targetView = document.getElementById(`${portalPrefix}-tab-${tabName}`);
+      if(targetView) targetView.classList.add('active');
+      if(clickedBtn) clickedBtn.classList.add('active');
+      
+      portal.querySelector('.portal-content').scrollTop = 0;
+    }
+  </script>
+</head>
+<body>
+
+  <header>
+    <div class="brand-group" onclick="navigateTo('view-home')">
+      <div class="brand-logo">Q</div>
+      <div class="brand-name">SkillBridge</div>
+    </div>
+    
+    <div id="header-auth-btns" style="display: flex; gap: 12px;">
+      <button class="btn btn-outline" onclick="navigateTo('view-login')">Log in</button>
+      <button class="btn btn-primary" onclick="navigateTo('view-login')">Sign up</button>
+    </div>
+
+    <div id="header-user-profile" style="display: none; align-items: center; gap: 16px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--qz-primary-light); color: var(--qz-primary); display: flex; align-items: center; justify-content: center; font-weight: 800;">U</div>
+        <span style="font-weight: 800; color: var(--qz-text-main);" id="user-profile-name">User</span>
+      </div>
+      <button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;" onclick="navigateTo('view-home')">Log out</button>
+    </div>
+  </header>
+
+  <main id="view-home" class="main-view active" style="overflow-y: auto;">
+    <div style="padding: 80px 24px; text-align: center; max-width: 900px; margin: 0 auto;">
+      <h1 style="font-size: 3.5rem; font-weight: 900; letter-spacing: -0.04em; margin-bottom: 24px; line-height: 1.1;">
+        The Ultimate <span style="color: var(--qz-primary);">Academia-Industry</span> Placement Engine.
+      </h1>
+      <p style="font-size: 1.2rem; color: var(--qz-text-muted); margin-bottom: 40px; font-weight: 500;">
+        From tracking university attendance to matching with top-tier tech jobs based on mathematically verified skill scores. One unified ecosystem.
+      </p>
+      <button class="btn btn-primary" style="font-size: 1.1rem; padding: 14px 32px;" onclick="navigateTo('view-login')">Enter Portal</button>
+    </div>
+  </main>
+
+  <main id="view-login" class="main-view" style="overflow-y: auto;">
+    <div style="max-width: 600px; padding: 60px 24px; margin: 0 auto; width: 100%;">
+      <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 12px;">Welcome back</h1>
+        <p style="color: var(--qz-text-muted); font-weight: 600;">Select your designated portal to continue.</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="card" style="display: flex; align-items: center; gap: 20px; cursor: pointer; padding: 16px 24px;" onclick="handleLogin('Aarav Sharma', 'view-student')">
+          <div style="font-size: 2.5rem;">👨‍🎓</div>
+          <div><h3 style="font-size: 1.2rem; font-weight: 800;">Aarav Sharma</h3><p style="color: var(--qz-text-muted); font-weight: 600;">Student Portal • B.Tech CSE '26</p></div>
+        </div>
+        <div class="card" style="display: flex; align-items: center; gap: 20px; cursor: pointer; padding: 16px 24px;" onclick="handleLogin('Dr. Verma (TPO)', 'view-college')">
+          <div style="font-size: 2.5rem;">🏫</div>
+          <div><h3 style="font-size: 1.2rem; font-weight: 800;">College Admin (TPO)</h3><p style="color: var(--qz-text-muted); font-weight: 600;">Placement & Academic Analytics</p></div>
+        </div>
+        <div class="card" style="display: flex; align-items: center; gap: 20px; cursor: pointer; padding: 16px 24px;" onclick="handleLogin('Razorpay HR', 'view-company')">
+          <div style="font-size: 2.5rem;">🏢</div>
+          <div><h3 style="font-size: 1.2rem; font-weight: 800;">Company Recruiter</h3><p style="color: var(--qz-text-muted); font-weight: 600;">Talent Search & Job Postings</p></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <main id="view-student" class="main-view">
+    <div class="portal-layout">
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-link active" onclick="switchInnerTab('student', 'dashboard', this)"><i class="ph ph-squares-four"></i> Dashboard</div>
+        </div>
+        
+        <div class="sidebar-section">
+          <div class="sidebar-label">Academics</div>
+          <div class="sidebar-link" onclick="switchInnerTab('student', 'profile', this)"><i class="ph ph-user"></i> My Profile</div>
+          <div class="sidebar-link" onclick="switchInnerTab('student', 'courses', this)"><i class="ph ph-book-open"></i> Courses</div>
+          <div class="sidebar-link" onclick="switchInnerTab('student', 'attendance', this)"><i class="ph ph-check-square"></i> Attendance</div>
+          <div class="sidebar-link" onclick="switchInnerTab('student', 'grades', this)"><i class="ph ph-exam"></i> Marks & Grades</div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-label">Skills & Growth</div>
+          <div class="sidebar-link" onclick="switchInnerTab('student', 'assessment', this)"><i class="ph ph-target"></i> Skill Assessment</div>
+          <div class="sidebar-link" onclick="switchInnerTab('student', 'skills', this)"><i class="ph ph-code"></i> My Skills</div>
+          <div class="sidebar-link" onclick="switchInnerTab('student', 'progress', this)"><i class="ph ph-trend-up"></i> Skill Progress</div>
+          <div class="sidebar-link" onclick="switchInnerTab('student', 'learning', this)"><i class="ph ph-map-trifold"></i> Learning Path</div>
+          <div class="sidebar-link" onclick="switchInnerTab('student', 'certs', this)"><i class="ph ph-certificate"></i> Certifications</div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-label">Industry & Career</div>
+          <div class="sidebar-link" onclick="switchInnerTab('student', 'industry', this)"><i class="ph ph-briefcase"></i> Industry Demand</div>
+          <div class="sidebar-link" onclick="switchInnerTab('student', 'internships', this)"><i class="ph ph-compass"></i> Internships</div>
+          <div class="sidebar-link" onclick="switchInnerTab('student', 'jobs', this)"><i class="ph ph-buildings"></i> Jobs</div>
+          <div class="sidebar-link" onclick="switchInnerTab('student', 'guidance', this)"><i class="ph ph-lightbulb"></i> Career Guidance</div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-label">Other</div>
+          <div class="sidebar-link" onclick="switchInnerTab('student', 'resume', this)"><i class="ph ph-file-pdf"></i> Resume Builder</div>
+          <div class="sidebar-link" onclick="switchInnerTab('student', 'settings', this)"><i class="ph ph-gear"></i> Settings</div>
+        </div>
+      </aside>
+
+      <div class="portal-content">
+        
+        <div id="student-tab-dashboard" class="sub-view active">
+          <h1 style="font-size: 2.2rem; font-weight: 900; margin-bottom: 24px;">Overview</h1>
+          <div class="grid-3" style="margin-bottom: 24px;">
+            <div class="card" style="background: var(--qz-primary); color: white; border-color: var(--qz-primary);">
+              <h3 style="font-size: 0.9rem; opacity: 0.8; text-transform: uppercase;">Current CGPA</h3>
+              <div style="font-size: 3rem; font-weight: 900;">8.64</div>
+              <p style="font-size: 0.85rem; font-weight: 600;">Semester 5 • B.Tech CSE</p>
+            </div>
+            <div class="card">
+              <h3 style="font-size: 0.9rem; color: var(--qz-text-muted); text-transform: uppercase;">Industry Match Score</h3>
+              <div style="font-size: 3rem; font-weight: 900; color: var(--qz-green);">72%</div>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 600;">Target: Full Stack Developer</p>
+            </div>
+            <div class="card">
+              <h3 style="font-size: 0.9rem; color: var(--qz-text-muted); text-transform: uppercase;">Active Applications</h3>
+              <div style="font-size: 3rem; font-weight: 900; color: var(--qz-amber);">3</div>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 600;">1 Interview Scheduled</p>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="card">
+              <h2 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 16px;">Top Skill Gaps</h2>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><strong>Docker & AWS</strong><span style="color: var(--qz-rose); font-weight: 800;">15%</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width: 15%; background: var(--qz-rose);"></div></div>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-top: 12px;">Blocking 14 Tier-1 Job Matches.</p>
+              <button class="btn btn-outline" style="width: 100%; margin-top: 12px;" onclick="switchInnerTab('student', 'learning', document.querySelectorAll('.sidebar-link')[10])">View Bridge Course</button>
+            </div>
+            <div class="card">
+              <h2 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 16px;">Upcoming Opportunities</h2>
+              <div style="padding: 12px; border: 1px solid var(--qz-border); border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between;">
+                <div><strong style="font-size: 0.9rem;">TCS Registration Deadline</strong><br><span style="font-size: 0.75rem; color: var(--qz-text-muted);">Due Tomorrow</span></div>
+                <span class="tag" style="background: var(--qz-rose-light); color: var(--qz-rose);">Urgent</span>
+              </div>
+              <div style="padding: 12px; border: 1px solid var(--qz-border); border-radius: 8px; display: flex; justify-content: space-between;">
+                <div><strong style="font-size: 0.9rem;">Amazon Intern Drive</strong><br><span style="font-size: 0.75rem; color: var(--qz-text-muted);">Aug 30, 2026</span></div>
+                <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Career</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="student-tab-profile" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">My Profile</h1>
+          <div class="card" style="max-width: 800px;">
+            <div style="display: flex; gap: 20px; margin-bottom: 24px;">
+              <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--qz-primary); color: #fff; font-size: 2.5rem; display: flex; align-items: center; justify-content: center; font-weight: 900;">AS</div>
+              <div>
+                <h2 style="font-size: 1.8rem; font-weight: 900;">Aarav Sharma</h2>
+                <p style="color: var(--qz-text-muted); font-weight: 600;">Computer Science Engineering • Batch of 2026</p>
+                <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-top: 4px;">Roll No: 2026CSE104 • aarav.sharma@college.edu</p>
+              </div>
+            </div>
+            <label style="font-size: 0.85rem; font-weight: 800;">Bio / Objective</label>
+            <textarea class="input-field" rows="3">Passionate software engineering student looking for backend and cloud opportunities.</textarea>
+            <label style="font-size: 0.85rem; font-weight: 800;">GitHub Profile</label>
+            <input type="text" class="input-field" value="https://github.com/aaravsharma" />
+            <button class="btn btn-primary">Save Changes</button>
+          </div>
+        </div>
+
+        <div id="student-tab-courses" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">My Courses (Sem 5)</h1>
+          <div class="grid-2">
+            <div class="card">
+              <h3 style="font-size: 1.2rem; font-weight: 800;">CS301: Operating Systems</h3>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 12px;">Prof. Sharma • 4 Credits</p>
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700;"><span>Syllabus Covered</span><span style="color: var(--qz-green);">75%</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width: 75%; background: var(--qz-green);"></div></div>
+            </div>
+            <div class="card">
+              <h3 style="font-size: 1.2rem; font-weight: 800;">CS302: Database Management</h3>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 12px;">Prof. Gupta • 4 Credits</p>
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700;"><span>Syllabus Covered</span><span style="color: var(--qz-amber);">40%</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width: 40%; background: var(--qz-amber);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="student-tab-attendance" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Attendance Log</h1>
+          <div class="card">
+            <table>
+              <tr><th>Subject</th><th>Total Classes</th><th>Attended</th><th>Percentage</th></tr>
+              <tr><td>Operating Systems</td><td>40</td><td>35</td><td><span style="color: var(--qz-green); font-weight: 800;">87.5%</span></td></tr>
+              <tr><td>Database Management</td><td>38</td><td>29</td><td><span style="color: var(--qz-amber); font-weight: 800;">76.3%</span></td></tr>
+              <tr><td>Computer Networks</td><td>42</td><td>31</td><td><span style="color: var(--qz-rose); font-weight: 800;">73.8%</span></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div id="student-tab-grades" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Marks & Grades</h1>
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+              <h3 style="font-size: 1.2rem; font-weight: 800;">Semester 4 Transcript</h3>
+              <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">SGPA: 8.80</span>
+            </div>
+            <table>
+              <tr><th>Course Code</th><th>Course Name</th><th>Grade</th></tr>
+              <tr><td>CS201</td><td>Data Structures</td><td><strong style="color: var(--qz-green);">A+</strong></td></tr>
+              <tr><td>CS202</td><td>Computer Architecture</td><td><strong style="color: var(--qz-green);">A</strong></td></tr>
+              <tr><td>MA201</td><td>Engineering Math III</td><td><strong style="color: var(--qz-amber);">B+</strong></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div id="student-tab-assessment" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Verified Skill Assessments</h1>
+          <div class="grid-2">
+            <div class="card">
+              <h3 style="font-size: 1.2rem; font-weight: 800;">Advanced Java</h3>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Proves your proficiency for Backend Roles.</p>
+              <button class="btn btn-primary" style="width: 100%;">Take 45-Min Test</button>
+            </div>
+            <div class="card" style="opacity: 0.7;">
+              <h3 style="font-size: 1.2rem; font-weight: 800;">SQL Fundamentals</h3>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Completed on Aug 10, 2026.</p>
+              <button class="btn btn-outline" style="width: 100%; color: var(--qz-green); border-color: var(--qz-green);">Score: 92% (Passed)</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="student-tab-skills" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">My Skill Inventory</h1>
+          <div class="card">
+            <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 16px;">System-Verified Skills</h3>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <span class="tag" style="background: var(--qz-green-light); color: var(--qz-green); font-size: 0.85rem; padding: 8px 16px;">Java (Advanced)</span>
+              <span class="tag" style="background: var(--qz-green-light); color: var(--qz-green); font-size: 0.85rem; padding: 8px 16px;">Spring Boot</span>
+              <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary); font-size: 0.85rem; padding: 8px 16px;">React.js</span>
+              <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary); font-size: 0.85rem; padding: 8px 16px;">SQL</span>
+            </div>
+            <h3 style="font-size: 1.1rem; font-weight: 800; margin-top: 24px; margin-bottom: 16px;">Self-Reported (Unverified)</h3>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <span class="tag" style="background: var(--qz-bg); border: 1px solid var(--qz-border); color: var(--qz-text-muted); font-size: 0.85rem; padding: 8px 16px;">Docker</span>
+              <span class="tag" style="background: var(--qz-bg); border: 1px solid var(--qz-border); color: var(--qz-text-muted); font-size: 0.85rem; padding: 8px 16px;">AWS</span>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--qz-text-muted); margin-top: 12px;">Take assessments to verify self-reported skills.</p>
+          </div>
+        </div>
+
+        <div id="student-tab-progress" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Skill Progress Over Time</h1>
+          <div class="card" style="text-align: center; padding: 60px;">
+            <h2 style="color: var(--qz-primary); font-size: 3rem;">📈</h2>
+            <h3 style="font-weight: 800; margin-top: 16px;">Your rating is growing!</h3>
+            <p style="color: var(--qz-text-muted);">You have improved your Backend coding speed by 15% this month.</p>
+          </div>
+        </div>
+
+        <div id="student-tab-learning" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">AI Recommended Learning Path</h1>
+          <div class="card">
+            <div class="timeline-item">
+              <h3 style="font-size: 1.1rem; font-weight: 800;">1. Core Java Mastery</h3>
+              <p style="font-size: 0.85rem; color: var(--qz-green); font-weight: 700;">Completed</p>
+            </div>
+            <div class="timeline-item">
+              <h3 style="font-size: 1.1rem; font-weight: 800;">2. Database Normalization</h3>
+              <p style="font-size: 0.85rem; color: var(--qz-green); font-weight: 700;">Completed</p>
+            </div>
+            <div class="timeline-item" style="border-color: var(--qz-primary);">
+              <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--qz-primary);">3. Docker & Containers</h3>
+              <p style="font-size: 0.85rem; color: var(--qz-amber); font-weight: 700; margin-bottom: 12px;">In Progress • Critical Gap</p>
+              <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem;">Resume Lab</button>
+            </div>
+            <div class="timeline-item" style="border-color: transparent;">
+              <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--qz-text-muted);">4. AWS Cloud Deployment</h3>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 700;">Locked</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="student-tab-certs" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Certifications</h1>
+          <div class="grid-2">
+            <div class="card">
+              <h3 style="font-size: 1.1rem; font-weight: 800;">AWS Cloud Practitioner</h3>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Issued: Jan 2026</p>
+              <span class="tag" style="background: var(--qz-green-light); color: var(--qz-green);">TPO Verified</span>
+            </div>
+          </div>
+          <button class="btn btn-outline" style="margin-top: 16px;">+ Upload Certificate</button>
+        </div>
+
+        <div id="student-tab-industry" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Live Industry Demand</h1>
+          <div class="card">
+            <table>
+              <tr><th>Skill</th><th>Market Demand</th><th>Your Level</th></tr>
+              <tr><td>React / Next.js</td><td><span style="color: var(--qz-primary); font-weight: 800;">Very High</span></td><td><span style="color: var(--qz-green); font-weight: 800;">85%</span></td></tr>
+              <tr><td>Docker / K8s</td><td><span style="color: var(--qz-primary); font-weight: 800;">Very High</span></td><td><span style="color: var(--qz-rose); font-weight: 800;">15%</span></td></tr>
+              <tr><td>Python / GenAI</td><td><span style="color: var(--qz-amber); font-weight: 800;">Trending</span></td><td><span style="color: var(--qz-amber); font-weight: 800;">50%</span></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div id="student-tab-internships" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Internship Matches</h1>
+          <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <span class="tag" style="background: var(--qz-green-light); color: var(--qz-green); margin-bottom: 8px;">89% Match</span>
+              <h3 style="font-size: 1.2rem; font-weight: 800;">Backend Developer Intern</h3>
+              <p style="font-size: 0.9rem; color: var(--qz-text-muted); font-weight: 600;">Razorpay • Remote • ₹35,000/mo</p>
+            </div>
+            <button class="btn btn-primary" onclick="alert('Applied via SkillBridge Profile!')">1-Click Apply</button>
+          </div>
+        </div>
+
+        <div id="student-tab-jobs" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Full-Time Job Matches</h1>
+          <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary); margin-bottom: 8px;">For 2026 Grads</span>
+              <h3 style="font-size: 1.2rem; font-weight: 800;">Software Engineer 1</h3>
+              <p style="font-size: 0.9rem; color: var(--qz-text-muted); font-weight: 600;">Google • Bangalore • ₹24 LPA</p>
+            </div>
+            <button class="btn btn-outline" onclick="switchInnerTab('student', 'assessment', document.querySelectorAll('.sidebar-link')[7])">Take Required Assessment</button>
+          </div>
+        </div>
+
+        <div id="student-tab-guidance" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">AI Career Guidance</h1>
+          <div class="card" style="background: var(--qz-primary-light); border-color: var(--qz-primary);">
+            <p style="font-size: 1.1rem; font-weight: 600; color: var(--qz-text-main);">"Aarav, based on your high Java scores but low Cloud scores, you should pivot from targeting <strong>Cloud Architect</strong> to targeting <strong>Backend Developer</strong> roles for immediate placements, while learning Docker on the side."</p>
+          </div>
+        </div>
+
+        <div id="student-tab-resume" class="sub-view">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+            <h1 style="font-size: 2rem; font-weight: 900;">AI Resume Builder</h1>
+            <button class="btn btn-primary">Export PDF</button>
+          </div>
+          <div class="card" style="background: #fff; color: #000; border: 1px solid #ccc; max-width: 800px; margin: 0 auto;">
+            <div style="border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 12px;">
+              <h1 style="font-size: 2.2rem; font-weight: 900; color: #000;">Aarav Sharma</h1>
+              <p style="font-size: 0.9rem;">B.Tech CSE • aarav.sharma@college.edu • github.com/aaravsharma</p>
+            </div>
+            <h3 style="font-size: 1.1rem; font-weight: 800; border-bottom: 1px solid #ccc; margin-bottom: 8px;">VERIFIED SKILLS (SKILLBRIDGE)</h3>
+            <p style="font-size: 0.95rem; margin-bottom: 16px;">Java (Advanced), Spring Boot, React.js, SQL, System Design</p>
+            <h3 style="font-size: 1.1rem; font-weight: 800; border-bottom: 1px solid #ccc; margin-bottom: 8px;">EDUCATION</h3>
+            <p style="font-size: 0.95rem; margin-bottom: 16px;"><strong>National Institute of Technology</strong> <br> B.Tech Computer Science (2022 - 2026) • CGPA: 8.64</p>
+          </div>
+        </div>
+
+        <div id="student-tab-settings" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Account Settings</h1>
+          <div class="card" style="max-width: 600px;">
+            <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 16px;">Privacy</h3>
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+              <input type="checkbox" checked id="vis"><label for="vis">Allow Recruiters to view my verified skill profile directly.</label>
+            </div>
+            <button class="btn btn-danger">Delete Account Data</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <main id="view-college" class="main-view">
+    <div class="portal-layout">
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-label">TPO Admin</div>
+          <div class="sidebar-link active" onclick="switchInnerTab('college', 'dashboard', this)"><i class="ph ph-chart-line-up"></i> Placement Analytics</div>
+          <div class="sidebar-link" onclick="switchInnerTab('college', 'students', this)"><i class="ph ph-users"></i> Student Roster</div>
+          <div class="sidebar-link" onclick="switchInnerTab('college', 'demands', this)"><i class="ph ph-briefcase"></i> Industry Demands</div>
+          <div class="sidebar-link" onclick="switchInnerTab('college', 'drives', this)"><i class="ph ph-buildings"></i> Campus Drives</div>
+          <div class="sidebar-link" onclick="switchInnerTab('college', 'alumni', this)"><i class="ph ph-graduation-cap"></i> Alumni Network</div>
+          <div class="sidebar-link" onclick="switchInnerTab('college', 'reports', this)"><i class="ph ph-file-pdf"></i> Compliance Reports</div>
+          <div class="sidebar-link" onclick="switchInnerTab('college', 'comms', this)"><i class="ph ph-envelope-simple"></i> Communications</div>
+          <div class="sidebar-link" style="color: var(--qz-rose); margin-top: 24px;" onclick="navigateTo('view-home')"><i class="ph ph-sign-out"></i> Logout</div>
+        </div>
+      </aside>
+
+      <div class="portal-content">
+        
+        <div id="college-tab-dashboard" class="sub-view active">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Placement Analytics (2026)</h1>
+          <div class="grid-3" style="margin-bottom: 24px;">
+            <div class="card">
+              <div style="font-size: 0.75rem; font-weight: 800; color: var(--qz-text-muted); text-transform: uppercase;">Batch Readiness</div>
+              <div style="font-size: 2.5rem; font-weight: 900; color: var(--qz-primary);">78%</div>
+            </div>
+            <div class="card">
+              <div style="font-size: 0.75rem; font-weight: 800; color: var(--qz-text-muted); text-transform: uppercase;">Active Companies</div>
+              <div style="font-size: 2.5rem; font-weight: 900; color: var(--qz-green);">42</div>
+            </div>
+            <div class="card">
+              <div style="font-size: 0.75rem; font-weight: 800; color: var(--qz-text-muted); text-transform: uppercase;">Total Offers</div>
+              <div style="font-size: 2.5rem; font-weight: 900; color: var(--qz-text-main);">184</div>
+            </div>
+          </div>
+          <div class="card">
+            <h2 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 16px;">Top Deficit: Cloud & DevOps</h2>
+            <p style="color: var(--qz-text-muted); margin-bottom: 16px;">62% of visiting firms require this, but only 28% of your students have verified this skill.</p>
+            <button class="btn btn-primary">Inject Bridge Course to Students</button>
+          </div>
+        </div>
+
+        <div id="college-tab-students" class="sub-view">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+            <h1 style="font-size: 2rem; font-weight: 900;">Student Roster</h1>
+            <input type="text" class="input-field" placeholder="Search roll number..." style="width: 300px; margin: 0;">
+          </div>
+          <div class="card">
+            <table>
+              <tr><th>Name</th><th>Branch</th><th>Overall Fit</th><th>Status</th><th>Action</th></tr>
+              <tr><td style="font-weight:800;">Aarav Sharma</td><td>CSE</td><td><span style="color:var(--qz-green); font-weight:800;">88%</span></td><td>Interviewing</td><td><button class="btn btn-outline" style="padding: 4px 10px; font-size: 0.8rem;">Dossier</button></td></tr>
+              <tr><td style="font-weight:800;">Priya Patel</td><td>IT</td><td><span style="color:var(--qz-green); font-weight:800;">94%</span></td><td>Placed</td><td><button class="btn btn-outline" style="padding: 4px 10px; font-size: 0.8rem;">Dossier</button></td></tr>
+              <tr><td style="font-weight:800;">Rahul Verma</td><td>ECE</td><td><span style="color:var(--qz-amber); font-weight:800;">58%</span></td><td>Training</td><td><button class="btn btn-outline" style="padding: 4px 10px; font-size: 0.8rem;">Dossier</button></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div id="college-tab-demands" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Industry Demands</h1>
+          <div class="card">
+            <table>
+              <tr><th>Skill / Tech</th><th>Required By</th><th>Campus Verification Level</th></tr>
+              <tr><td style="font-weight:800;">Spring Boot</td><td>32 Companies</td><td><span style="color:var(--qz-green); font-weight:800;">90% Mastered</span></td></tr>
+              <tr><td style="font-weight:800;">Docker</td><td>26 Companies</td><td><span style="color:var(--qz-rose); font-weight:800;">28% Mastered</span></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div id="college-tab-drives" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Upcoming Campus Drives</h1>
+          <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3 style="font-size: 1.2rem; font-weight: 800;">Amazon</h3>
+              <p style="color: var(--qz-text-muted);">Sept 10, 2026 • SDE 1 Roles</p>
+            </div>
+            <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Scheduled</span>
+          </div>
+        </div>
+
+        <div id="college-tab-alumni" class="sub-view"><h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Alumni Network</h1><div class="card"><p>Track post-placement success of the 2025 batch.</p></div></div>
+        <div id="college-tab-reports" class="sub-view"><h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Compliance Reports</h1><div class="card"><button class="btn btn-primary">Generate AICTE/NIRF Export</button></div></div>
+        <div id="college-tab-comms" class="sub-view"><h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Mass Communications</h1><div class="card"><p>Send email/SMS alerts regarding placement drives to all eligible CSE students.</p></div></div>
+
+      </div>
+    </div>
+  </main>
+
+  <main id="view-company" class="main-view">
+    <div class="portal-layout">
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-label">Recruiter Hub</div>
+          <div class="sidebar-link active" onclick="switchInnerTab('company', 'dashboard', this)"><i class="ph ph-chart-bar"></i> Dashboard</div>
+          <div class="sidebar-link" onclick="switchInnerTab('company', 'search', this)"><i class="ph ph-magnifying-glass"></i> Talent Search</div>
+          <div class="sidebar-link" onclick="switchInnerTab('company', 'jobs', this)"><i class="ph ph-briefcase"></i> Job Postings</div>
+          <div class="sidebar-link" onclick="switchInnerTab('company', 'interviews', this)"><i class="ph ph-calendar-check"></i> Interviews</div>
+          <div class="sidebar-link" onclick="switchInnerTab('company', 'drives', this)"><i class="ph ph-buildings"></i> Campus Drives</div>
+          <div class="sidebar-link" onclick="switchInnerTab('company', 'offers', this)"><i class="ph ph-handshake"></i> Offers</div>
+          <div class="sidebar-link" onclick="switchInnerTab('company', 'profile', this)"><i class="ph ph-building"></i> Company Profile</div>
+          <div class="sidebar-link" style="color: var(--qz-rose); margin-top: 24px;" onclick="navigateTo('view-home')"><i class="ph ph-sign-out"></i> Logout</div>
+        </div>
+      </aside>
+
+      <div class="portal-content">
+        
+        <div id="company-tab-dashboard" class="sub-view active">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Hiring Overview</h1>
+          <div class="grid-3">
+            <div class="card">
+              <div style="font-size: 0.75rem; font-weight: 800; color: var(--qz-text-muted); text-transform: uppercase;">Active Roles</div>
+              <div style="font-size: 2.5rem; font-weight: 900; color: var(--qz-text-main);">3</div>
+            </div>
+            <div class="card">
+              <div style="font-size: 0.75rem; font-weight: 800; color: var(--qz-text-muted); text-transform: uppercase;">Total Applicants</div>
+              <div style="font-size: 2.5rem; font-weight: 900; color: var(--qz-primary);">142</div>
+            </div>
+            <div class="card">
+              <div style="font-size: 0.75rem; font-weight: 800; color: var(--qz-text-muted); text-transform: uppercase;">Interviews Pending</div>
+              <div style="font-size: 2.5rem; font-weight: 900; color: var(--qz-amber);">18</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="company-tab-search" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Reverse Talent Search</h1>
+          <div class="card" style="margin-bottom: 24px; display: flex; gap: 12px;">
+            <input type="text" class="input-field" value="Java, Spring Boot, SQL, Docker" style="margin-top: 0;">
+            <button class="btn btn-primary" onclick="alert('Filtering mathematically verified candidates...')">Search</button>
+          </div>
+          <div class="card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div>
+              <h3 style="font-size: 1.2rem; font-weight: 800;">Aarav Sharma <span class="tag" style="background: var(--qz-green-light); color: var(--qz-green); margin-left: 8px;">91% Fit</span></h3>
+              <p style="font-size: 0.9rem; color: var(--qz-text-muted); font-weight: 600; margin-top: 4px;">Verified: Java (90%) • SQL (75%)</p>
+            </div>
+            <button class="btn btn-primary">Schedule Interview</button>
+          </div>
+          <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3 style="font-size: 1.2rem; font-weight: 800;">Neha Kulkarni <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary); margin-left: 8px;">84% Fit</span></h3>
+              <p style="font-size: 0.9rem; color: var(--qz-text-muted); font-weight: 600; margin-top: 4px;">Verified: Docker (80%) • Spring (80%)</p>
+            </div>
+            <button class="btn btn-primary">Schedule Interview</button>
+          </div>
+        </div>
+
+        <div id="company-tab-jobs" class="sub-view">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+            <h1 style="font-size: 2rem; font-weight: 900;">Active Postings</h1>
+            <button class="btn btn-primary">+ Create New Role</button>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 1.2rem; font-weight: 800;">Backend Engineering Intern</h3>
+            <p style="font-size: 0.9rem; color: var(--qz-text-muted); font-weight: 600; margin-top: 4px;">Remote • ₹35,000/mo • 42 Applicants</p>
+            <button class="btn btn-outline" style="margin-top: 16px;">View Applicants Dashboard</button>
+          </div>
+        </div>
+
+        <div id="company-tab-interviews" class="sub-view">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Scheduled Interviews</h1>
+          <div class="card" style="border-left: 4px solid var(--qz-primary);">
+            <div style="display: flex; justify-content: space-between;">
+              <div>
+                <h3 style="font-size: 1.1rem; font-weight: 800;">Aarav Sharma (Backend Intern)</h3>
+                <p style="font-size: 0.85rem; color: var(--qz-text-muted);">Aug 30, 2026 • 2:00 PM IST</p>
+              </div>
+              <button class="btn btn-primary">Join Video Link</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="company-tab-drives" class="sub-view"><h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Campus Drives</h1><div class="card"><p>Select partnered colleges (e.g., NIT Surat) to schedule dedicated hiring events.</p></div></div>
+        <div id="company-tab-offers" class="sub-view"><h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Offers & Onboarding</h1><div class="card"><p>Track offers rolled out to students via the SkillBridge platform.</p></div></div>
+        <div id="company-tab-profile" class="sub-view"><h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 24px;">Employer Branding</h1><div class="card"><p>Update Razorpay's profile, culture videos, and tech stack details.</p></div></div>
+
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
