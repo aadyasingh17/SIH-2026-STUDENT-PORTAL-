@@ -5,8 +5,9 @@ require('dotenv').config();
 const config = require('./src/config/env');
 const app = require('./src/app');
 
-// Wire college dashboard router (ensured wired into Express app)
+// Wire college dashboard and students routers (ensured wired into Express app)
 const collegeDashboardRouter = require('./routes/collegeDashboard');
+const collegeStudentsRouter = require('./routes/collegeStudents');
 
 const PORT = config.port;
 
