@@ -4,13 +4,18 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const config = {
-  port: process.env.PORT || 5000,
+  port: Number(process.env.PORT) || 5000,
   nodeEnv: process.env.NODE_ENV || 'development',
   isProduction: process.env.NODE_ENV === 'production',
   supabase: {
     url: process.env.SUPABASE_URL || '',
-    anonKey: process.env.SUPABASE_ANON_KEY || ''
-  }
+    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || ''
+  },
+  jwtSecret: process.env.JWT_SECRET || ''
 };
+
+if (config.isProduction && (!config.supabase.url || !config.supabase.serviceRoleKey || !config.jwtSecret)) {
+  throw new Error('SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, and JWT_SECRET are required in production');
+}
 
 module.exports = config;

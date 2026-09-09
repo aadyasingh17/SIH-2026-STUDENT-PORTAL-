@@ -1,23 +1,14 @@
 const { createClient } = require('@supabase/supabase-js');
-const dotenv = require('dotenv');
+const config = require('../src/config/env');
 
-// Load environment variables
-dotenv.config();
-
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY;
-
-if (!supabaseUrl || !supabaseServiceRoleKey) {
-  console.warn('⚠️ [Supabase] Warning: SUPABASE_URL or SUPABASE_KEY / SUPABASE_SERVICE_ROLE_KEY is missing in environment variables.');
+if (!config.supabase.url || !config.supabase.serviceRoleKey) {
+  throw new Error('SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required');
 }
-
-// Debug line requested
-console.log('SUPABASE_URL:', process.env.SUPABASE_URL);
 
 // Create and export configured Supabase client
 const supabase = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co',
-  supabaseServiceRoleKey || 'placeholder_service_role_key',
+  config.supabase.url,
+  config.supabase.serviceRoleKey,
   {
     auth: {
       persistSession: false,

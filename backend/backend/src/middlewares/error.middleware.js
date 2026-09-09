@@ -3,7 +3,7 @@
  * Catches unhandled errors across the application and returns a standardized JSON response.
  */
 const errorHandler = (err, req, res, next) => {
-  const statusCode = err.statusCode || res.statusCode === 200 ? 500 : res.statusCode;
+  const statusCode = err.statusCode || (res.statusCode === 200 ? 500 : res.statusCode);
   
   res.status(statusCode).json({
     status: 'error',

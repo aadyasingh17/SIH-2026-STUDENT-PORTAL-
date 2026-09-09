@@ -2,8 +2,9 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const supabase = require('../config/supabaseClient');
-const authMiddleware = require('../middleware/authMiddleware');
-const requireRole = require('../middleware/requireRole');
+const config = require('../src/config/env');
+const authMiddleware = require('../src/middlewares/authMiddleware');
+const requireRole = require('../src/middlewares/requireRole');
 
 const router = express.Router();
 
@@ -74,13 +75,18 @@ router.post('/signup', async (req, res, next) => {
     }
 
     // Generate JWT containing college id and role: "college"
-    const jwtSecret = process.env.JWT_SECRET || 'default_jwt_secret';
+    if (!config.jwtSecret) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'JWT authentication is not configured'
+      });
+    }
     const token = jwt.sign(
       {
         id: newCollege.id,
         role: 'college'
       },
-      jwtSecret,
+      config.jwtSecret,
       { expiresIn: '7d' }
     );
 
@@ -153,13 +159,18 @@ router.post('/login', async (req, res, next) => {
     }
 
     // Generate JWT containing college id and role: "college"
-    const jwtSecret = process.env.JWT_SECRET || 'default_jwt_secret';
+    if (!config.jwtSecret) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'JWT authentication is not configured'
+      });
+    }
     const token = jwt.sign(
       {
         id: college.id,
         role: 'college'
       },
-      jwtSecret,
+      config.jwtSecret,
       { expiresIn: '7d' }
     );
 

@@ -5,11 +5,6 @@ require('dotenv').config();
 const config = require('./src/config/env');
 const app = require('./src/app');
 
-// Wire college dashboard, students, and drives routers (ensured wired into Express app)
-const collegeDashboardRouter = require('./routes/collegeDashboard');
-const collegeStudentsRouter = require('./routes/collegeStudents');
-const collegeDrivesRouter = require('./routes/collegeDrives');
-
 const PORT = config.port;
 
 // 3. Start HTTP Server
@@ -41,4 +36,3 @@ process.on('SIGTERM', () => handleShutdown('SIGTERM'));
 
 module.exports = app;
 module.exports.server = server;
-
