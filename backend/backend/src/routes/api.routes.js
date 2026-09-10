@@ -4,7 +4,7 @@ const collegeAuthRoutes = require('../../routes/collegeAuth');
 const collegeStudentsRoutes = require('../../routes/collegeStudents');
 const collegeDrivesRoutes = require('../../routes/collegeDrives');
 const collegeDashboardRoutes = require('../../routes/collegeDashboard');
-
+const studentRoutes = require('../../routes/student');
 const router = express.Router();
 
 // Mount individual route modules
@@ -13,5 +13,6 @@ router.use('/college', collegeAuthRoutes);
 router.use('/college', collegeDashboardRoutes);
 router.use('/college/students', collegeStudentsRoutes);
 router.use('/college/drives', collegeDrivesRoutes);
+router.use('/student', studentRoutes);
 
 module.exports = router;
