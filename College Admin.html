@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillBridge | Company Recruiter Portal</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+
+    /* ========================================================= */
+    /* DESIGN SYSTEM VARIABLES                                   */
+    /* ========================================================= */
+    :root {
+      --qz-bg: #090E0C;            
+      --qz-surface: #111A15;      
+      --qz-primary: #00FF66;      
+      --qz-primary-hover: #00CC52;
+      --qz-primary-light: rgba(0, 255, 102, 0.12);
+      
+      --qz-text-main: #E2E8F0;    
+      --qz-text-muted: #829A8E;   
+      --qz-border: #1E2D24;        
+      --qz-border-hover: #2D4336;
+      
+      --qz-amber: #FFB038;
+      --qz-amber-light: rgba(255, 176, 56, 0.15);
+      --qz-rose: #FF5E7E;
+      --qz-rose-light: rgba(255, 94, 126, 0.15);
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.6);
+      
+      --font-mono: 'Space Mono', monospace;
+    }
+
+    /* ========================================================= */
+    /* RESET & CORE TYPOGRAPHY                                   */
+    /* ========================================================= */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background-color: var(--qz-bg);
+      color: var(--qz-text-main);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ========================================================= */
+    /* HEADER NAVIGATION                                         */
+    /* ========================================================= */
+    header {
+      background: var(--qz-surface);
+      border-bottom: 1px solid var(--qz-border);
+      padding: 16px 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand-link { text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px; }
+    .brand-group { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .hamburger-icon {
+      font-size: 1.8rem;
+      color: var(--qz-text-main);
+      cursor: pointer;
+      user-select: none;
+      transition: 0.2s;
+      margin-right: 8px;
+    }
+    .hamburger-icon:hover { color: var(--qz-primary); }
+    .brand-logo {
+      width: 36px; height: 36px;
+      background: var(--qz-primary);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #000;
+      font-size: 1.2rem;
+    }
+    .brand-name { font-size: 1.4rem; font-weight: 900; color: var(--qz-primary); letter-spacing: -0.04em; }
+
+    /* ========================================================= */
+    /* ATOMIC UI COMPONENTS                                      */
+    /* ========================================================= */
+    .btn {
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--qz-primary); color: #000; font-weight: 800; }
+    .btn-primary:hover { background: var(--qz-primary-hover); }
+    .btn-outline { background: transparent; border-color: var(--qz-border); color: var(--qz-text-main); }
+    .btn-outline:hover { border-color: var(--qz-primary); color: var(--qz-primary); }
+    .btn-disabled { background: var(--qz-border); color: var(--qz-text-muted); cursor: not-allowed; border: none; }
+    .btn-sm { padding: 6px 14px; font-size: 0.8rem; }
+    
+    .card {
+      background: var(--qz-surface);
+      border: 1px solid var(--qz-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 20px;
+    }
+    .clickable-card {
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .clickable-card:hover {
+      border-color: var(--qz-primary);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 255, 102, 0.12);
+    }
+
+    .tag {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+    th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--qz-border); font-size: 0.92rem; }
+    th { color: var(--qz-text-muted); font-size: 0.78rem; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; }
+
+    .verification-bar {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed var(--qz-border);
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      gap: 20px;
+      margin-bottom: 24px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--qz-text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.02);
+      color: var(--qz-text-main);
+      border: 1px solid var(--qz-border);
+      border-radius: var(--radius-sm);
+      font-size: 0.92rem;
+      font-family: inherit;
+      outline: none;
+      transition: 0.2s;
+    }
+    .input-field:focus {
+      border-color: var(--qz-primary);
+      box-shadow: 0 0 10px rgba(0, 255, 102, 0.1);
+    }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: 8px;
+      border: 1px solid var(--qz-border);
+    }
+    .progress-fill { height: 100%; border-radius: 99px; }
+
+    /* ========================================================= */
+    /* PURE CSS HASH ROUTER                                      */
+    /* ========================================================= */
+    .app-body { flex: 1; display: flex; flex-direction: row; height: calc(100vh - 70px); position: relative; }
+    .main-view { width: 100%; flex: 1; padding: 40px 60px; overflow-y: auto; transition: width 0.3s ease; }
+
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
+    #welcome-screen { display: flex; } 
+    
+    #dashboard:target, #search:target, #jobs:target, 
+    #interviews:target, #drives:target, #offers:target, #profile:target { display: block; }
+    
+    #dashboard:target ~ #welcome-screen, #search:target ~ #welcome-screen, 
+    #jobs:target ~ #welcome-screen, #interviews:target ~ #welcome-screen, 
+    #drives:target ~ #welcome-screen, #offers:target ~ #welcome-screen, 
+    #profile:target ~ #welcome-screen { display: none; }
+    
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ========================================================= */
+    /* SIDEBAR SYSTEM                                            */
+    /* ========================================================= */
+    #sidebar-toggle { display: none; }
+    nav {
+      width: 280px;
+      background: var(--qz-surface);
+      border-right: 1px solid var(--qz-border);
+      padding: 24px 16px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+    #sidebar-toggle:checked ~ .app-body nav { width: 0; padding: 0; border-right: none; }
+    nav::-webkit-scrollbar { width: 5px; }
+    nav::-webkit-scrollbar-thumb { background: var(--qz-border-hover); border-radius: 10px; }
+
+    nav h2 { font-size: 0.78rem; color: var(--qz-text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; padding-left: 12px; }
+    nav ul { list-style: none; }
+    nav a {
+      text-decoration: none;
+      color: var(--qz-text-main);
+      display: block;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: 0.2s ease;
+      margin-bottom: 4px;
+    }
+    nav a:hover { background: var(--qz-border); color: #99FFC2; }
+    
+    #dashboard:target ~ nav a[href="#dashboard"], 
+    #search:target ~ nav a[href="#search"], 
+    #jobs:target ~ nav a[href="#jobs"], 
+    #interviews:target ~ nav a[href="#interviews"], 
+    #drives:target ~ nav a[href="#drives"], 
+    #offers:target ~ nav a[href="#offers"], 
+    #profile:target ~ nav a[href="#profile"] { 
+      color: #00CC52; font-weight: 700; background: rgba(0, 204, 82, 0.1); border-left: 3px solid #00CC52; 
+    }
+
+    /* ========================================================= */
+    /* HERO HUD & 3D FLOATING SCROLL LETTER                      */
+    /* ========================================================= */
+    .hero-layout { justify-content: space-between; align-items: stretch; gap: 40px; height: 100%; min-height: 500px; }
+    .hero-content { flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 580px; }
+    
+    .hero-hud {
+      flex: 1.2; min-width: 340px; position: relative;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; background: var(--qz-surface);
+      border-radius: var(--radius-lg); border: 1px solid var(--qz-border);
+      min-height: 420px;
+    }
+    
+    .hud-element { position: absolute; font-size: 0.75rem; color: var(--qz-primary); font-weight: 700; letter-spacing: 0.1em; z-index: 5; }
+    .hud-top-left { top: 24px; left: 24px; }
+    .hud-bottom-right { bottom: 24px; right: 24px; color: var(--qz-text-muted); }
+    .hud-coords { 
+      position: absolute; bottom: 24px; left: 24px; 
+      border: 1px solid var(--qz-primary); background: var(--qz-primary-light); 
+      border-radius: var(--radius-sm); padding: 10px; font-size: 0.75rem; 
+      color: var(--qz-primary); font-weight: 600; line-height: 1.6; z-index: 5; 
+    }
+
+    /* Holographic Floating Letter Scroll */
+    .scroll-hologram-stage {
+      position: relative;
+      width: 320px;
+      height: 310px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 6;
+      animation: floatScroll 6s ease-in-out infinite;
+    }
+
+    .scroll-svg-model {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 18px rgba(0, 255, 102, 0.45));
+      transition: transform 0.4s ease, filter 0.4s ease;
+      cursor: pointer;
+    }
+
+    .scroll-hologram-stage:hover .scroll-svg-model {
+      transform: scale(1.06) rotate(1deg);
+      filter: drop-shadow(0 0 30px rgba(0, 255, 102, 0.8));
+    }
+
+    /* Radar scanline sweep */
+    .scan-beam {
+      position: absolute;
+      top: -30%;
+      left: 0;
+      width: 100%;
+      height: 40%;
+      background: linear-gradient(180deg, transparent, rgba(0, 255, 102, 0.15), transparent);
+      animation: radarSweep 4s linear infinite;
+      pointer-events: none;
+    }
+
+    /* Hologram ground projection ring */
+    .holo-grid-plane {
+      position: absolute;
+      bottom: 25px;
+      width: 250px;
+      height: 85px;
+      border-radius: 50%;
+      border: 1px dashed var(--qz-primary);
+      background: radial-gradient(ellipse, rgba(0, 255, 102, 0.12) 0%, transparent 70%);
+      transform: rotateX(65deg);
+      box-shadow: 0 0 20px rgba(0, 255, 102, 0.3);
+      animation: pulseGrid 3s ease-in-out infinite alternate;
+      z-index: 3;
+    }
+
+    @keyframes floatScroll {
+      0%, 100% { transform: translateY(0px) rotate(-1deg); }
+      50% { transform: translateY(-14px) rotate(1.5deg); }
+    }
+
+    @keyframes radarSweep {
+      0% { top: -20%; opacity: 0; }
+      50% { opacity: 1; }
+      100% { top: 110%; opacity: 0; }
+    }
+
+    @keyframes pulseGrid {
+      0% { transform: rotateX(65deg) scale(0.95); opacity: 0.6; }
+      100% { transform: rotateX(65deg) scale(1.05); opacity: 1; }
+    }
+
+    /* ========================================================= */
+    /* RESPONSIVE MEDIA QUERIES                                  */
+    /* ========================================================= */
+    @media (max-width: 900px) {
+      .main-view { padding: 30px 24px; }
+      nav {
+        position: absolute;
+        top: 0; bottom: 0; left: 0;
+        z-index: 95;
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.8);
+      }
+      #sidebar-toggle:not(:checked) ~ .app-body nav { width: 260px; }
+      #sidebar-toggle:checked ~ .app-body nav { width: 0; padding: 0; }
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 12px 16px; }
+      .main-view { padding: 20px 16px; }
+      .brand-name { font-size: 1.15rem; }
+      .verification-bar { font-size: 0.68rem; gap: 10px; }
+      .hero-layout { min-height: auto; flex-direction: column; }
+      .hero-hud { min-height: 340px; }
+      .scroll-hologram-stage { width: 260px; height: 250px; }
+      .hud-coords { bottom: 16px; left: 16px; padding: 6px; font-size: 0.65rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hidden Checkbox for Mobile Navigation Toggle -->
+  <input type="checkbox" id="sidebar-toggle">
+
+  <!-- ========================================== -->
+  <!-- HEADER                                     -->
+  <!-- ========================================== -->
+  <header>
+    <div class="brand-group">
+      <label for="sidebar-toggle" class="hamburger-icon" aria-label="Toggle navigation">☰</label>
+      <a href="#welcome-screen" class="brand-link">
+        <div class="brand-logo">REC</div>
+        <div class="brand-name">SkillBridge <span style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 600; margin-left: 6px;">| Recruiter Hub</span></div>
+      </a>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: center;">
+      <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary); border: 1px solid var(--qz-primary);">Razorpay Talent Acquisition</span>
+      <button class="btn btn-primary" onclick="alert('Session terminated. Returning to Gateway.')">Logout</button>
+    </div>
+  </header>
+
+  <div class="app-body">
+    
+    <!-- ========================================== -->
+    <!-- SIDEBAR NAVIGATION                         -->
+    <!-- ========================================== -->
+    <nav>
+      <h2>Recruiter Hub</h2>
+      <ul>
+        <li><a href="#dashboard">Hiring Overview</a></li>
+        <li><a href="#search">Talent Search</a></li>
+        <li><a href="#jobs">Job Postings</a></li>
+        <li><a href="#interviews">Interviews</a></li>
+        <li><a href="#drives">Campus Drives</a></li>
+        <li><a href="#offers">Offers &amp; Onboarding</a></li>
+        <li><a href="#profile">Company Profile</a></li>
+      </ul>
+    </nav>
+
+    <!-- ========================================== -->
+    <!-- MAIN VIEW AREA                             -->
+    <!-- ========================================== -->
+    <main class="main-view">
+
+      <!-- ========================================== -->
+      <!-- TAB 1: HIRING OVERVIEW (DASHBOARD)         -->
+      <!-- ========================================== -->
+      <div id="dashboard" class="tab-content">
+        <div class="verification-bar">
+          <div><span style="color: var(--qz-text-muted);">ORG_ID:</span> <span style="color: var(--qz-primary);">RAZORPAY-CORP-488</span></div>
+          <div><span style="color: var(--qz-text-muted);">RECRUITMENT_CYCLE:</span> <span style="color: var(--qz-primary);">FALL 2026 ACTIVE</span></div>
+          <div><span style="color: var(--qz-text-muted);">PARITY_VERIFICATION:</span> <span style="color: var(--qz-text-main);">TPO SIGNED TRANSCRIPTS</span></div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Recruiter Dashboard</h1>
+            <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Real-time pipeline tracking and candidate matching metrics.</p>
+          </div>
+          <a href="#jobs" class="btn btn-primary">+ Create New Role</a>
+        </div>
+
+        <div class="grid-3" style="margin-bottom: 24px;">
+          <div class="card" style="background: var(--qz-primary-light); border-color: var(--qz-primary);">
+            <h3 style="font-size: 0.85rem; color: var(--qz-primary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 8px;">Active Job Openings</h3>
+            <div style="font-size: 3.5rem; font-weight: 900; color: var(--qz-primary); line-height: 1;">3</div>
+            <p style="font-size: 0.85rem; color: var(--qz-text-main); font-weight: 600; margin-top: 8px;">Backend, Cloud &amp; Frontend roles</p>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 0.85rem; color: var(--qz-text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 8px;">Verified Candidates</h3>
+            <div style="font-size: 3.5rem; font-weight: 900; color: var(--qz-text-main); line-height: 1;" id="applicant-count">142</div>
+            <p style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 600; margin-top: 8px;">Profiles meeting minimum 80% criteria</p>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 0.85rem; color: var(--qz-text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 8px;">Interviews In Queue</h3>
+            <div style="font-size: 3.5rem; font-weight: 900; color: var(--qz-amber); line-height: 1;">18</div>
+            <p style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 600; margin-top: 8px;">4 scheduled for today</p>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h2 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 16px;">Top In-Demand Stacks in Pipeline</h2>
+            <div style="margin-bottom: 14px;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;"><span>Java &amp; Spring Boot Ecosystem</span><strong style="color: var(--qz-primary);">91% Match Rate</strong></div>
+              <div class="progress-track"><div class="progress-fill" style="width: 91%; background: var(--qz-primary);"></div></div>
+            </div>
+            <div style="margin-bottom: 14px;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;"><span>PostgreSQL / Query Optimization</span><strong style="color: var(--qz-primary);">86% Match Rate</strong></div>
+              <div class="progress-track"><div class="progress-fill" style="width: 86%; background: var(--qz-primary);"></div></div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;"><span>Docker Containerization &amp; ECS</span><strong style="color: var(--qz-rose);">34% Match Rate (Deficit)</strong></div>
+              <div class="progress-track"><div class="progress-fill" style="width: 34%; background: var(--qz-rose);"></div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 16px;">Upcoming Drive Actions</h2>
+            <div style="padding: 12px; border: 1px solid var(--qz-border); border-radius: var(--radius-sm); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02);">
+              <div><strong style="color: var(--qz-text-main);">NIT Surat Campus Selection</strong><br><span style="font-size: 0.8rem; color: var(--qz-text-muted);">Sept 18, 2026 • 42 Shortlisted</span></div>
+              <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Scheduled</span>
+            </div>
+            <div style="padding: 12px; border: 1px solid var(--qz-border); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02);">
+              <div><strong style="color: var(--qz-text-main);">Technical Coding Round (HackerEarth)</strong><br><span style="font-size: 0.8rem; color: var(--qz-text-muted);">Batch of 2026 • 90 Candidates</span></div>
+              <span class="tag" style="background: var(--qz-amber-light); color: var(--qz-amber);">In Progress</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- TAB 2: REVERSE TALENT SEARCH               -->
+      <!-- ========================================== -->
+      <div id="search" class="tab-content">
+        <div class="verification-bar">
+          <div><span style="color: var(--qz-text-muted);">TALENT_RADAR:</span> <span style="color: var(--qz-primary);">INDEXING VERIFIED PROFILES</span></div>
+          <div><span style="color: var(--qz-text-muted);">ALGORITHM:</span> <span style="color: var(--qz-primary);">TRUST_SCORE_RANKED</span></div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Reverse Talent Search</h1>
+          <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Filter candidates by certified skills validated by academic faculty and technical lab assessments[cite: 1].</p>
+        </div>
+
+        <div class="card" style="margin-bottom: 24px;">
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <input type="text" id="talent-query" class="input-field" value="Java, Spring Boot, SQL, Docker" style="margin: 0; flex: 1; min-width: 250px;" placeholder="Search required skills...">
+            <button class="btn btn-primary" onclick="runTalentSearch()">Filter Candidates</button>
+          </div>
+        </div>
+
+        <div id="talent-results-container">
+          <!-- Candidate 1 -->
+          <div class="card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--qz-text-main);">Aarav Sharma</h3>
+                <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary); border: 1px solid var(--qz-primary);">91% Skill Match</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 600;">NIT Surat • B.Tech CSE (2026) • CGPA: 8.64</p>
+              <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+                <span class="tag" style="background: rgba(255,255,255,0.04); color: var(--qz-primary);">Verified: Java (90%)</span>
+                <span class="tag" style="background: rgba(255,255,255,0.04); color: var(--qz-primary);">Verified: SQL (85%)</span>
+                <span class="tag" style="background: rgba(255,255,255,0.04); color: var(--qz-amber);">Self-Reported: Docker</span>
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="scheduleDirectInterview(this, 'Aarav Sharma')">Schedule Interview</button>
+          </div>
+
+          <!-- Candidate 2 -->
+          <div class="card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--qz-text-main);">Neha Kulkarni</h3>
+                <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary); border: 1px solid var(--qz-primary);">84% Skill Match</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 600;">NIT Surat • B.Tech CSE (2026) • CGPA: 8.90</p>
+              <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+                <span class="tag" style="background: rgba(255,255,255,0.04); color: var(--qz-primary);">Verified: Docker (80%)</span>
+                <span class="tag" style="background: rgba(255,255,255,0.04); color: var(--qz-primary);">Verified: Spring Boot (82%)</span>
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="scheduleDirectInterview(this, 'Neha Kulkarni')">Schedule Interview</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- TAB 3: ACTIVE JOB POSTINGS                 -->
+      <!-- ========================================== -->
+      <div id="jobs" class="tab-content">
+        <div class="verification-bar">
+          <div><span style="color: var(--qz-text-muted);">POSTINGS_ROUTER:</span> <span style="color: var(--qz-primary);">ACTIVE</span></div>
+          <div><span style="color: var(--qz-text-muted);">AUTO_SKILL_BENCHMARK:</span> <span style="color: var(--qz-primary);">STRICT</span></div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Active Job Postings</h1>
+            <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Manage engineering requisitions and benchmark criteria[cite: 1].</p>
+          </div>
+          <button class="btn btn-primary" onclick="toggleRoleCreator(true)">+ Publish New Requisition</button>
+        </div>
+
+        <div id="role-creator-drawer" class="card" style="display: none; border-color: var(--qz-primary); animation: fadeIn 0.3s ease;">
+          <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 16px;">Create Engineering Role</h2>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Role Title</label>
+              <input type="text" id="new-job-title" class="input-field" placeholder="e.g. Distributed Systems Engineer">
+            </div>
+            <div class="form-group">
+              <label>Annual Compensation (CTC)</label>
+              <input type="text" id="new-job-ctc" class="input-field" placeholder="e.g. ₹18.0 - 24.0 LPA">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Mandatory Verified Skills (Comma Separated)</label>
+            <input type="text" id="new-job-skills" class="input-field" placeholder="e.g. Java, Spring Boot, PostgreSQL">
+          </div>
+          <div style="display: flex; gap: 12px; justify-content: flex-end;">
+            <button class="btn btn-outline" onclick="toggleRoleCreator(false)">Cancel</button>
+            <button class="btn btn-primary" onclick="publishNewRole()">Publish Role to Campuses</button>
+          </div>
+        </div>
+
+        <div id="active-jobs-list" class="grid-2">
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Full-Time Placement</span>
+              <strong style="font-size: 0.85rem; color: var(--qz-primary);">42 Applicants</strong>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 900; margin-bottom: 4px;">Backend Engineering Intern / PPO</h3>
+            <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Remote / Bengaluru • ₹35,000/mo stipend (₹22 LPA PPO)</p>
+            <button class="btn btn-outline" style="width: 100%;" onclick="alert('Accessing candidate application submissions...')">Review Pipeline Dashboard</button>
+          </div>
+
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Permanent Role</span>
+              <strong style="font-size: 0.85rem; color: var(--qz-primary);">78 Applicants</strong>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 900; margin-bottom: 4px;">Cloud Infrastructure Associate</h3>
+            <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Bengaluru HQ • ₹16.0 - 20.0 LPA</p>
+            <button class="btn btn-outline" style="width: 100%;" onclick="alert('Accessing candidate application submissions...')">Review Pipeline Dashboard</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- TAB 4: INTERVIEWS                          -->
+      <!-- ========================================== -->
+      <div id="interviews" class="tab-content">
+        <div class="verification-bar">
+          <div><span style="color: var(--qz-text-muted);">CALL_BRIDGE:</span> <span style="color: var(--qz-primary);">ENCRYPTED_WEBRTC</span></div>
+          <div><span style="color: var(--qz-text-muted);">ASSESSMENT_MODE:</span> <span style="color: var(--qz-primary);">LIVE_CODE_SANDBOX</span></div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Scheduled Interviews</h1>
+          <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Technical assessments and real-time pair programming slots[cite: 1].</p>
+        </div>
+
+        <div class="card" style="border-left: 4px solid var(--qz-primary);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--qz-text-main);">Aarav Sharma — Technical Round 1</h3>
+                <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Confirmed</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted);">Role: Backend Engineering Intern • Today at 2:00 PM IST</p>
+            </div>
+            <button class="btn btn-primary" onclick="alert('Initializing encrypted SkillBridge WebRTC video room & shared coding sandbox...')">Join Video Call</button>
+          </div>
+        </div>
+
+        <div class="card" style="border-left: 4px solid var(--qz-amber);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--qz-text-main);">Neha Kulkarni — System Architecture</h3>
+                <span class="tag" style="background: var(--qz-amber-light); color: var(--qz-amber);">In 2 Days</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted);">Role: Cloud Infrastructure • Sept 10, 2026 at 4:30 PM IST</p>
+            </div>
+            <button class="btn btn-outline" onclick="alert('Interview calendar invitation sent.')">Reschedule</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- TAB 5: CAMPUS DRIVES                       -->
+      <!-- ========================================== -->
+      <div id="drives" class="tab-content">
+        <div class="verification-bar">
+          <div><span style="color: var(--qz-text-muted);">PARTNERED_COLLEGES:</span> <span style="color: var(--qz-primary);">14 INSTITUTES</span></div>
+          <div><span style="color: var(--qz-text-muted);">HIRING_SEASON:</span> <span style="color: var(--qz-text-main);">FALL 2026 TIER-1</span></div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Campus Drives</h1>
+          <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Manage dedicated university hiring slots and on-campus visit schedules[cite: 1].</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary); margin-bottom: 8px;">Tier-1 Dedicated Slot</span>
+            <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 4px;">National Institute of Technology (NIT Surat)</h3>
+            <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Scheduled Date: Sept 18, 2026 • 42 Filtered Candidates</p>
+            <button class="btn btn-outline" style="width: 100%;" onclick="alert('Opening candidate filtering portal for NIT Surat...')">Review Pre-Filtered Batch</button>
+          </div>
+
+          <div class="card" style="border: 1px dashed var(--qz-border);">
+            <span class="tag" style="background: rgba(255,255,255,0.05); color: var(--qz-text-muted); margin-bottom: 8px;">Booking Open</span>
+            <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 4px;">IIT Gandhinagar Tech Drive</h3>
+            <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Available Slots: Oct 2 - Oct 5, 2026</p>
+            <button class="btn btn-primary" style="width: 100%;" onclick="alert('Booking request dispatched to College TPO Dean.')">Request Dedicated Slot</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- TAB 6: OFFERS & ONBOARDING                 -->
+      <!-- ========================================== -->
+      <div id="offers" class="tab-content">
+        <div class="verification-bar">
+          <div><span style="color: var(--qz-text-muted);">LETTER_ENGINE:</span> <span style="color: var(--qz-primary);">DIGITALLY_SIGNED</span></div>
+          <div><span style="color: var(--qz-text-muted);">PARCHMENT_DISPATCH:</span> <span style="color: var(--qz-primary);">INSTANT_TRANSMIT</span></div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Offers &amp; Onboarding</h1>
+          <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Rolled out digital offer letters and compliance status[cite: 1].</p>
+        </div>
+
+        <div class="card" style="padding: 0; overflow-x: auto;">
+          <table>
+            <thead>
+              <tr style="background: rgba(255,255,255,0.02);">
+                <th>Candidate</th>
+                <th>Role Offered</th>
+                <th>Package Band</th>
+                <th>Status</th>
+                <th>Digital Letter</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Priya Patel</strong><br><span style="font-size: 0.75rem; color: var(--qz-text-muted);">NIT Surat • IT</span></td>
+                <td>Backend Engineer</td>
+                <td>₹22.0 LPA</td>
+                <td><span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Accepted ✓</span></td>
+                <td><button class="btn btn-outline btn-sm" onclick="alert('Viewing cryptographically signed offer letter #SB-RZ-8802')">View Letter</button></td>
+              </tr>
+              <tr>
+                <td><strong>Siddharth Rao</strong><br><span style="font-size: 0.75rem; color: var(--qz-text-muted);">BITS Pilani • CSE</span></td>
+                <td>Infrastructure Trainee</td>
+                <td>₹18.5 LPA</td>
+                <td><span class="tag" style="background: var(--qz-amber-light); color: var(--qz-amber);">Pending Review</span></td>
+                <td><button class="btn btn-outline btn-sm" onclick="alert('Viewing cryptographically signed offer letter #SB-RZ-8819')">View Letter</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- TAB 7: COMPANY PROFILE                     -->
+      <!-- ========================================== -->
+      <div id="profile" class="tab-content">
+        <div class="verification-bar">
+          <div><span style="color: var(--qz-text-muted);">EMPLOYER_BRAND:</span> <span style="color: var(--qz-primary);">VERIFIED</span></div>
+          <div><span style="color: var(--qz-text-muted);">PORTAL_VISIBILITY:</span> <span style="color: var(--qz-primary);">ALL_PARTNER_COLLEGES</span></div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Company Profile &amp; Culture</h1>
+          <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Manage Razorpay's recruiter showcase displayed on student portals[cite: 1].</p>
+        </div>
+
+        <div class="card" style="max-width: 800px;">
+          <div class="form-group">
+            <label>Organization Name</label>
+            <input type="text" class="input-field" value="Razorpay Software Private Limited">
+          </div>
+          <div class="form-group">
+            <label>Primary Tech Stack Tagline</label>
+            <input type="text" class="input-field" value="High-throughput FinTech Architecture • Go, Java, AWS, Kubernetes">
+          </div>
+          <div class="form-group">
+            <label>Company Culture &amp; Engineering Philosophy</label>
+            <textarea class="input-field" rows="4">We power millions of businesses across India with financial infrastructure. We value clean code, deep understanding of relational transactions, and engineers who build resilient distributed systems.</textarea>
+          </div>
+          <div style="text-align: right; border-top: 1px solid var(--qz-border); padding-top: 18px;">
+            <button class="btn btn-primary" onclick="alert('Company profile & student-facing branding synchronized successfully!')">Save Profile</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- DEFAULT WELCOME SCREEN (HOMEPAGE)          -->
+      <!-- ========================================== -->
+      <div id="welcome-screen" class="tab-content default-tab hero-layout">
+        <div class="hero-content">
+          <h1 style="font-size: 3.8rem; font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -0.03em;">
+            Welcome back,<br><span style="color: var(--qz-primary);">Razorpay HR</span>
+          </h1>
+          <div style="color: var(--qz-primary); font-size: 1.1rem; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 24px;">
+            VERIFIED TALENT SEARCH &amp; RECRUITER ENGINE
+          </div>
+          <p style="font-size: 1.05rem; color: var(--qz-text-muted); max-width: 500px; line-height: 1.6; margin-bottom: 40px;">
+            Discover campus candidates backed by cryptographically verified skills, schedule video interviews, and dispatch signed offer letters instantly[cite: 1].
+          </p>
+          <div>
+            <a href="#dashboard" class="btn btn-primary" style="padding: 14px 28px; font-size: 1rem;">Enter Recruiter Hub</a>
+          </div>
+        </div>
+
+        <div class="hero-hud card">
+          <div class="hud-element hud-top-left">> RECRUITER_RADAR: ONLINE<br>SEARCH_INDEX: 3,420 GRADUATES</div>
+          <div class="hud-element hud-bottom-right">// TALENT_TRANSMISSION</div>
+          
+          <div class="hud-coords">
+            CONTRACT_HASH: #OFFER-2026<br>STATUS: DIGITALLY_SIGNED
+          </div>
+
+          <!-- Radar sweep overlay -->
+          <div class="scan-beam"></div>
+
+          <!-- 3D Holographic Floating Letter Scroll Object -->
+          <div class="scroll-hologram-stage" title="Click to view offer parchment telemetries">
+            <svg class="scroll-svg-model" viewBox="0 0 320 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <filter id="scroll-glow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3.5" result="glow"/>
+                  <feMerge>
+                    <feMergeNode in="glow"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+                <linearGradient id="parchment-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00FF66" stop-opacity="0.16"/>
+                  <stop offset="50%" stop-color="#090E0C" stop-opacity="0.85"/>
+                  <stop offset="100%" stop-color="#00FF66" stop-opacity="0.10"/>
+                </linearGradient>
+                <linearGradient id="roller-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#00FF66" stop-opacity="0.4"/>
+                  <stop offset="50%" stop-color="#00CC52" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#00FF66" stop-opacity="0.4"/>
+                </linearGradient>
+              </defs>
+
+              <!-- Top Rolled Cylinder Roller Head -->
+              <ellipse cx="160" cy="55" rx="80" ry="12" fill="url(#roller-grad)" stroke="#00FF66" stroke-width="2" filter="url(#scroll-glow)"/>
+              <ellipse cx="80" cy="55" rx="9" ry="14" fill="#090E0C" stroke="#00FF66" stroke-width="2"/>
+              <ellipse cx="240" cy="55" rx="9" ry="14" fill="#090E0C" stroke="#00FF66" stroke-width="2"/>
+              <circle cx="80" cy="55" r="4" fill="#00FF66"/>
+              <circle cx="240" cy="55" r="4" fill="#00FF66"/>
+
+              <!-- Main Unrolled Letter Parchment Body -->
+              <path d="M80,55 Q160,65 240,55 L234,225 Q160,235 86,225 Z" fill="url(#parchment-grad)" stroke="#00FF66" stroke-width="2" filter="url(#scroll-glow)"/>
+
+              <!-- Bottom Rolled Cylinder Roller Foot -->
+              <ellipse cx="160" cy="225" rx="74" ry="11" fill="url(#roller-grad)" stroke="#00FF66" stroke-width="2"/>
+              <ellipse cx="86" cy="225" rx="8" ry="13" fill="#090E0C" stroke="#00FF66" stroke-width="2"/>
+              <ellipse cx="234" cy="225" rx="8" ry="13" fill="#090E0C" stroke="#00FF66" stroke-width="2"/>
+              <circle cx="86" cy="225" r="3.5" fill="#00FF66"/>
+              <circle cx="234" cy="225" r="3.5" fill="#00FF66"/>
+
+              <!-- Text/Telemetry Lines Inside Letter (Offer Contract Text) -->
+              <line x1="108" y1="85" x2="212" y2="85" stroke="#00FF66" stroke-width="2" stroke-linecap="round" filter="url(#scroll-glow)"/>
+              <line x1="108" y1="98" x2="185" y2="98" stroke="#00FF66" stroke-width="1.4" stroke-opacity="0.7" stroke-linecap="round"/>
+              
+              <!-- Paragraph 1 Lines -->
+              <line x1="105" y1="116" x2="215" y2="116" stroke="#00FF66" stroke-width="1.2" stroke-dasharray="4,2" stroke-opacity="0.8"/>
+              <line x1="105" y1="128" x2="210" y2="128" stroke="#00FF66" stroke-width="1.2" stroke-dasharray="6,3" stroke-opacity="0.8"/>
+              <line x1="105" y1="140" x2="190" y2="140" stroke="#00FF66" stroke-width="1.2" stroke-dasharray="3,2" stroke-opacity="0.8"/>
+
+              <!-- Cryptographic Institutional Seal Stamp (Center-Bottom) -->
+              <g transform="translate(160, 182)">
+                <polygon points="0,-16 11,-11 16,0 11,11 0,16 -11,11 -16,0 -11,-11" stroke="#00FF66" stroke-width="1.6" fill="rgba(0, 255, 102, 0.15)" filter="url(#scroll-glow)"/>
+                <circle cx="0" cy="0" r="10" stroke="#00FF66" stroke-width="1.2" stroke-dasharray="2,2"/>
+                <text x="0" y="4" font-size="9" font-family="'Space Mono', monospace" font-weight="900" fill="#00FF66" text-anchor="middle">S</text>
+                <!-- Seal Ribbon Tails -->
+                <path d="M-6,14 L-10,28 L-4,24 L0,28 L-2,14" fill="#00FF66" fill-opacity="0.3" stroke="#00FF66" stroke-width="1"/>
+                <path d="M6,14 L10,28 L4,24 L0,28 L2,14" fill="#00FF66" fill-opacity="0.3" stroke="#00FF66" stroke-width="1"/>
+              </g>
+
+              <!-- Isometric Floating Particles -->
+              <circle cx="95" cy="40" r="1.5" fill="#00FF66"/>
+              <circle cx="230" cy="38" r="2" fill="#00FF66" filter="url(#scroll-glow)"/>
+              <circle cx="70" cy="180" r="1.5" fill="#00FF66"/>
+              <circle cx="250" cy="190" r="2" fill="#00FF66"/>
+            </svg>
+          </div>
+
+          <!-- Projected Isometric Hologram Ground Ring -->
+          <div class="holo-grid-plane"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- FOOTER                                     -->
+  <!-- ========================================== -->
+  <footer style="border-top: 1px solid var(--qz-border); padding: 16px 32px; font-size: 0.8rem; color: var(--qz-text-muted); background: var(--qz-surface); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+    <div>SkillBridge v2.6 • Recruiter Hub &amp; Talent Engine</div>
+    <div>Radar Status: 100% Operational (Latency: 14ms)</div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT STATE ENGINE                    -->
+  <!-- ========================================== -->
+  <script>
+    function runTalentSearch() {
+      const q = document.getElementById('talent-query').value.trim();
+      if (!q) {
+        alert("Please enter target technical skills to search.");
+        return;
+      }
+      alert(`Querying verified student database for: "${q}"... Found 2 matches.`);
+    }
+
+    function scheduleDirectInterview(btnElement, candidateName) {
+      btnElement.innerText = "Interview Scheduled ✓";
+      btnElement.style.background = "transparent";
+      btnElement.style.color = "var(--qz-primary)";
+      btnElement.style.borderColor = "var(--qz-primary)";
+      btnElement.disabled = true;
+
+      alert(`Interview Invitation dispatched to ${candidateName}. WebRTC room created.`);
+    }
+
+    function toggleRoleCreator(show) {
+      document.getElementById('role-creator-drawer').style.display = show ? 'block' : 'none';
+      if (show) {
+        document.getElementById('role-creator-drawer').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function publishNewRole() {
+      const title = document.getElementById('new-job-title').value.trim();
+      const ctc = document.getElementById('new-job-ctc').value.trim();
+      const skills = document.getElementById('new-job-skills').value.trim();
+
+      if (!title || !ctc) {
+        alert("Please provide at least a Role Title and Compensation Band.");
+        return;
+      }
+
+      const container = document.getElementById('active-jobs-list');
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Newly Published</span>
+          <strong style="font-size: 0.85rem; color: var(--qz-primary);">0 Applicants</strong>
+        </div>
+        <h3 style="font-size: 1.3rem; font-weight: 900; margin-bottom: 4px;">${title}</h3>
+        <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Campus Placement • ${ctc}</p>
+        <button class="btn btn-outline" style="width: 100%;" onclick="alert('Accessing candidate application submissions...')">Review Pipeline Dashboard</button>
+      `;
+
+      container.prepend(card);
+      toggleRoleCreator(false);
+      alert(`Requisition for "${title}" published across all partnered university campuses!`);
+    }
+
+    document.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 900) {
+          document.getElementById('sidebar-toggle').checked = true; 
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
