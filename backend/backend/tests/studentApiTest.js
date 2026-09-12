@@ -143,6 +143,14 @@ async function runTests() {
     }
     console.log('✅ PUT /api/student/profile succeeded.');
 
+    // 2b. Test Dashboard: GET /api/student/dashboard
+    console.log('\n[2b] Testing Dashboard Endpoint...');
+    const dashGet = await makeRequest(server, { path: '/api/student/dashboard', headers: authHeaders });
+    if (dashGet.status !== 200 || !dashGet.data.student || dashGet.data.status !== 'success') {
+      throw new Error(`Dashboard GET failed: ${JSON.stringify(dashGet.data)}`);
+    }
+    console.log('✅ GET /api/student/dashboard succeeded (student metrics, applications, upcoming drives).');
+
     // 3. Test Education: GET/POST/PUT/DELETE /api/student/education
     console.log('\n[3/12] Testing Education Endpoints...');
     const eduPost = await makeRequest(server, {
