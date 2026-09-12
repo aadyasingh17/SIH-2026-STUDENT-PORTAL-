@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 
 const apiRoutes = require('./routes/api.routes');
+const studentRoutes = require('../routes/student');
 const notFoundHandler = require('./middlewares/notFound.middleware');
 const errorHandler = require('./middlewares/error.middleware');
 
@@ -22,6 +23,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Mount the single API route tree.
 app.use('/api', apiRoutes);
+
+// Mount Student Portal routes directly under /api/student for direct access
+app.use('/api/student', studentRoutes);
 
 // 5. 404 Not Found Fallback Middleware
 app.use(notFoundHandler);
