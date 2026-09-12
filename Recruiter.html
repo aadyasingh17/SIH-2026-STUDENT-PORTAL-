@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SkillBridge | College Admin (TPO) Portal</title>
+  <title>SkillBridge | Company Recruiter Portal</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
 
@@ -124,6 +124,18 @@
       box-shadow: var(--shadow-card);
       margin-bottom: 20px;
     }
+    .clickable-card {
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .clickable-card:hover {
+      border-color: var(--qz-primary);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 255, 102, 0.12);
+    }
 
     .tag {
       padding: 4px 10px;
@@ -203,13 +215,13 @@
     .tab-content { display: none; animation: fadeIn 0.3s ease; }
     #welcome-screen { display: flex; } 
     
-    #dashboard:target, #roster:target, #demands:target, 
-    #drives:target, #alumni:target, #reports:target, #comms:target { display: block; }
+    #dashboard:target, #search:target, #jobs:target, 
+    #interviews:target, #drives:target, #offers:target, #profile:target { display: block; }
     
-    #dashboard:target ~ #welcome-screen, #roster:target ~ #welcome-screen, 
-    #demands:target ~ #welcome-screen, #drives:target ~ #welcome-screen, 
-    #alumni:target ~ #welcome-screen, #reports:target ~ #welcome-screen, 
-    #comms:target ~ #welcome-screen { display: none; }
+    #dashboard:target ~ #welcome-screen, #search:target ~ #welcome-screen, 
+    #jobs:target ~ #welcome-screen, #interviews:target ~ #welcome-screen, 
+    #drives:target ~ #welcome-screen, #offers:target ~ #welcome-screen, 
+    #profile:target ~ #welcome-screen { display: none; }
     
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -248,17 +260,17 @@
     nav a:hover { background: var(--qz-border); color: #99FFC2; }
     
     #dashboard:target ~ nav a[href="#dashboard"], 
-    #roster:target ~ nav a[href="#roster"], 
-    #demands:target ~ nav a[href="#demands"], 
+    #search:target ~ nav a[href="#search"], 
+    #jobs:target ~ nav a[href="#jobs"], 
+    #interviews:target ~ nav a[href="#interviews"], 
     #drives:target ~ nav a[href="#drives"], 
-    #alumni:target ~ nav a[href="#alumni"], 
-    #reports:target ~ nav a[href="#reports"], 
-    #comms:target ~ nav a[href="#comms"] { 
+    #offers:target ~ nav a[href="#offers"], 
+    #profile:target ~ nav a[href="#profile"] { 
       color: #00CC52; font-weight: 700; background: rgba(0, 204, 82, 0.1); border-left: 3px solid #00CC52; 
     }
 
     /* ========================================================= */
-    /* HERO HUD & 3D FLOATING COLLEGE STRUCTURE                  */
+    /* HERO HUD & 3D FLOATING SCROLL LETTER                      */
     /* ========================================================= */
     .hero-layout { justify-content: space-between; align-items: stretch; gap: 40px; height: 100%; min-height: 500px; }
     .hero-content { flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 580px; }
@@ -281,29 +293,29 @@
       color: var(--qz-primary); font-weight: 600; line-height: 1.6; z-index: 5; 
     }
 
-    /* Isometric College Stage */
-    .college-hologram-stage {
+    /* Holographic Floating Letter Scroll */
+    .scroll-hologram-stage {
       position: relative;
       width: 320px;
-      height: 300px;
+      height: 310px;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 6;
-      animation: floatBuilding 6s ease-in-out infinite;
+      animation: floatScroll 6s ease-in-out infinite;
     }
 
-    .college-svg-model {
+    .scroll-svg-model {
       width: 100%;
       height: 100%;
-      filter: drop-shadow(0 0 16px rgba(0, 255, 102, 0.45));
+      filter: drop-shadow(0 0 18px rgba(0, 255, 102, 0.45));
       transition: transform 0.4s ease, filter 0.4s ease;
       cursor: pointer;
     }
 
-    .college-hologram-stage:hover .college-svg-model {
-      transform: scale(1.05);
-      filter: drop-shadow(0 0 28px rgba(0, 255, 102, 0.75));
+    .scroll-hologram-stage:hover .scroll-svg-model {
+      transform: scale(1.06) rotate(1deg);
+      filter: drop-shadow(0 0 30px rgba(0, 255, 102, 0.8));
     }
 
     /* Radar scanline sweep */
@@ -318,12 +330,12 @@
       pointer-events: none;
     }
 
-    /* Hologram ground projection grid */
+    /* Hologram ground projection ring */
     .holo-grid-plane {
       position: absolute;
       bottom: 25px;
-      width: 260px;
-      height: 90px;
+      width: 250px;
+      height: 85px;
       border-radius: 50%;
       border: 1px dashed var(--qz-primary);
       background: radial-gradient(ellipse, rgba(0, 255, 102, 0.12) 0%, transparent 70%);
@@ -333,9 +345,9 @@
       z-index: 3;
     }
 
-    @keyframes floatBuilding {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-12px) rotate(0.4deg); }
+    @keyframes floatScroll {
+      0%, 100% { transform: translateY(0px) rotate(-1deg); }
+      50% { transform: translateY(-14px) rotate(1.5deg); }
     }
 
     @keyframes radarSweep {
@@ -371,7 +383,7 @@
       .verification-bar { font-size: 0.68rem; gap: 10px; }
       .hero-layout { min-height: auto; flex-direction: column; }
       .hero-hud { min-height: 340px; }
-      .college-hologram-stage { width: 260px; height: 250px; }
+      .scroll-hologram-stage { width: 260px; height: 250px; }
       .hud-coords { bottom: 16px; left: 16px; padding: 6px; font-size: 0.65rem; }
     }
   </style>
@@ -387,14 +399,14 @@
   <header>
     <div class="brand-group">
       <label for="sidebar-toggle" class="hamburger-icon" aria-label="Toggle navigation">☰</label>
-      <a href="#welcome-screen" class="brand-link">
-        <div class="brand-logo">TPO</div>
-        <div class="brand-name">SkillBridge <span style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 600; margin-left: 6px;">| College Admin</span></div>
+      <a href="index.html" class="brand-link" title="Return to SkillBridge Home">
+        <div class="brand-logo">REC</div>
+        <div class="brand-name">SkillBridge <span style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 600; margin-left: 6px;">| Recruiter Hub</span></div>
       </a>
     </div>
     <div style="display: flex; gap: 12px; align-items: center;">
-      <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary); border: 1px solid var(--qz-primary);">Dr. Verma (TPO Dean)</span>
-      <button class="btn btn-primary" onclick="alert('Session terminated. Returning to Gateway.')">Logout</button>
+      <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary); border: 1px solid var(--qz-primary);">Razorpay Talent Acquisition</span>
+      <button class="btn btn-primary" onclick="window.location.href='index.html'">Return to Portal</button>
     </div>
   </header>
 
@@ -404,15 +416,15 @@
     <!-- SIDEBAR NAVIGATION                         -->
     <!-- ========================================== -->
     <nav>
-      <h2>TPO Administration</h2>
+      <h2>Recruiter Hub</h2>
       <ul>
-        <li><a href="#dashboard">Placement Analytics</a></li>
-        <li><a href="#roster">Student Roster</a></li>
-        <li><a href="#demands">Industry Demands</a></li>
+        <li><a href="#dashboard">Hiring Overview</a></li>
+        <li><a href="#search">Talent Search</a></li>
+        <li><a href="#jobs">Job Postings</a></li>
+        <li><a href="#interviews">Interviews</a></li>
         <li><a href="#drives">Campus Drives</a></li>
-        <li><a href="#alumni">Alumni Network</a></li>
-        <li><a href="#reports">Compliance Reports</a></li>
-        <li><a href="#comms">Communications</a></li>
+        <li><a href="#offers">Offers &amp; Onboarding</a></li>
+        <li><a href="#profile">Company Profile</a></li>
       </ul>
     </nav>
 
@@ -422,219 +434,302 @@
     <main class="main-view">
 
       <!-- ========================================== -->
-      <!-- TAB 1: PLACEMENT ANALYTICS (DASHBOARD)     -->
+      <!-- TAB 1: HIRING OVERVIEW (DASHBOARD)         -->
       <!-- ========================================== -->
       <div id="dashboard" class="tab-content">
         <div class="verification-bar">
-          <div><span style="color: var(--qz-text-muted);">INSTITUTION_CODE:</span> <span style="color: var(--qz-primary);">NIT-SURAT-2026</span></div>
-          <div><span style="color: var(--qz-text-muted);">NIRF_READINESS:</span> <span style="color: var(--qz-primary);">COMPLIANT</span></div>
-          <div><span style="color: var(--qz-text-muted);">TELEMETRY:</span> <span style="color: var(--qz-text-main);">LIVE BATCH FEED</span></div>
+          <div><span style="color: var(--qz-text-muted);">ORG_ID:</span> <span style="color: var(--qz-primary);">RAZORPAY-CORP-488</span></div>
+          <div><span style="color: var(--qz-text-muted);">RECRUITMENT_CYCLE:</span> <span style="color: var(--qz-primary);">FALL 2026 ACTIVE</span></div>
+          <div><span style="color: var(--qz-text-muted);">PARITY_VERIFICATION:</span> <span style="color: var(--qz-text-main);">TPO SIGNED TRANSCRIPTS</span></div>
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
           <div>
-            <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Placement Analytics (2026)</h1>
-            <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Real-time batch cohort qualification &amp; hiring velocity metrics.</p>
+            <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Recruiter Dashboard</h1>
+            <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Real-time pipeline tracking and candidate matching metrics.</p>
           </div>
-          <button class="btn btn-primary" onclick="alert('Exporting verified batch analytical summary as CSV...')">Export Cohort Metrics</button>
+          <a href="#jobs" class="btn btn-primary">+ Create New Role</a>
         </div>
 
         <div class="grid-3" style="margin-bottom: 24px;">
           <div class="card" style="background: var(--qz-primary-light); border-color: var(--qz-primary);">
-            <h3 style="font-size: 0.85rem; color: var(--qz-primary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 8px;">Batch Readiness</h3>
-            <div style="font-size: 3.5rem; font-weight: 900; color: var(--qz-primary); line-height: 1;">78%</div>
-            <p style="font-size: 0.85rem; color: var(--qz-text-main); font-weight: 600; margin-top: 8px;">Verified Tier-1 Technical Threshold</p>
+            <h3 style="font-size: 0.85rem; color: var(--qz-primary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 8px;">Active Job Openings</h3>
+            <div style="font-size: 3.5rem; font-weight: 900; color: var(--qz-primary); line-height: 1;">3</div>
+            <p style="font-size: 0.85rem; color: var(--qz-text-main); font-weight: 600; margin-top: 8px;">Backend, Cloud &amp; Frontend roles</p>
           </div>
           <div class="card">
-            <h3 style="font-size: 0.85rem; color: var(--qz-text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 8px;">Partner Companies</h3>
-            <div style="font-size: 3.5rem; font-weight: 900; color: var(--qz-text-main); line-height: 1;">42</div>
-            <p style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 600; margin-top: 8px;">Active campus recruiters logged</p>
+            <h3 style="font-size: 0.85rem; color: var(--qz-text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 8px;">Verified Candidates</h3>
+            <div style="font-size: 3.5rem; font-weight: 900; color: var(--qz-text-main); line-height: 1;" id="applicant-count">142</div>
+            <p style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 600; margin-top: 8px;">Profiles meeting minimum 80% criteria</p>
           </div>
           <div class="card">
-            <h3 style="font-size: 0.85rem; color: var(--qz-text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 8px;">Offers Recorded</h3>
-            <div style="font-size: 3.5rem; font-weight: 900; color: var(--qz-amber); line-height: 1;">184</div>
-            <p style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 600; margin-top: 8px;">Across CSE, IT &amp; ECE branches</p>
+            <h3 style="font-size: 0.85rem; color: var(--qz-text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 8px;">Interviews In Queue</h3>
+            <div style="font-size: 3.5rem; font-weight: 900; color: var(--qz-amber); line-height: 1;">18</div>
+            <p style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 600; margin-top: 8px;">4 scheduled for today</p>
           </div>
-        </div>
-
-        <div class="card" style="border-color: var(--qz-rose); background: rgba(255, 94, 126, 0.04);">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px; margin-bottom: 12px;">
-            <div>
-              <span class="tag" style="background: var(--qz-rose-light); color: var(--qz-rose); margin-bottom: 8px;">Critical Institutional Deficit</span>
-              <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--qz-text-main);">Top Deficit: Cloud Containerization &amp; DevOps</h2>
-            </div>
-            <button class="btn btn-primary" id="inject-btn" onclick="injectBridgeCourse()">Inject Bridge Course to Students</button>
-          </div>
-          <p style="color: var(--qz-text-muted); font-size: 0.95rem; max-width: 800px; line-height: 1.6;">
-            <strong>62% of visiting enterprises</strong> require verified Docker and AWS competence for Day-1 hiring, but currently only <strong>28% of your batch</strong> holds validated transcripts in these topics.
-          </p>
         </div>
 
         <div class="grid-2">
           <div class="card">
-            <h2 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 16px;">Branch Breakdown</h2>
+            <h2 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 16px;">Top In-Demand Stacks in Pipeline</h2>
             <div style="margin-bottom: 14px;">
-              <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;"><span>Computer Science (CSE)</span><strong style="color: var(--qz-primary);">92% Ready</strong></div>
-              <div class="progress-track"><div class="progress-fill" style="width: 92%; background: var(--qz-primary);"></div></div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;"><span>Java &amp; Spring Boot Ecosystem</span><strong style="color: var(--qz-primary);">91% Match Rate</strong></div>
+              <div class="progress-track"><div class="progress-fill" style="width: 91%; background: var(--qz-primary);"></div></div>
             </div>
             <div style="margin-bottom: 14px;">
-              <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;"><span>Information Tech (IT)</span><strong style="color: var(--qz-primary);">88% Ready</strong></div>
-              <div class="progress-track"><div class="progress-fill" style="width: 88%; background: var(--qz-primary);"></div></div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;"><span>PostgreSQL / Query Optimization</span><strong style="color: var(--qz-primary);">86% Match Rate</strong></div>
+              <div class="progress-track"><div class="progress-fill" style="width: 86%; background: var(--qz-primary);"></div></div>
             </div>
             <div>
-              <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;"><span>Electronics (ECE)</span><strong style="color: var(--qz-amber);">61% Ready</strong></div>
-              <div class="progress-track"><div class="progress-fill" style="width: 61%; background: var(--qz-amber);"></div></div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px;"><span>Docker Containerization &amp; ECS</span><strong style="color: var(--qz-rose);">34% Match Rate (Deficit)</strong></div>
+              <div class="progress-track"><div class="progress-fill" style="width: 34%; background: var(--qz-rose);"></div></div>
             </div>
           </div>
-          
+
           <div class="card">
-            <h2 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 16px;">Next Drive Milestones</h2>
+            <h2 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 16px;">Upcoming Drive Actions</h2>
             <div style="padding: 12px; border: 1px solid var(--qz-border); border-radius: var(--radius-sm); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02);">
-              <div><strong style="color: var(--qz-text-main);">Amazon SDE-1 Hiring Day</strong><br><span style="font-size: 0.8rem; color: var(--qz-text-muted);">Sept 10, 2026 • 80 Eligible</span></div>
-              <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Active Drive</span>
+              <div><strong style="color: var(--qz-text-main);">NIT Surat Campus Selection</strong><br><span style="font-size: 0.8rem; color: var(--qz-text-muted);">Sept 18, 2026 • 42 Shortlisted</span></div>
+              <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Scheduled</span>
             </div>
             <div style="padding: 12px; border: 1px solid var(--qz-border); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02);">
-              <div><strong style="color: var(--qz-text-main);">Razorpay Backend Internships</strong><br><span style="font-size: 0.8rem; color: var(--qz-text-muted);">Sept 18, 2026 • 42 Shortlisted</span></div>
-              <span class="tag" style="background: var(--qz-amber-light); color: var(--qz-amber);">Reviewing</span>
+              <div><strong style="color: var(--qz-text-main);">Technical Coding Round (HackerEarth)</strong><br><span style="font-size: 0.8rem; color: var(--qz-text-muted);">Batch of 2026 • 90 Candidates</span></div>
+              <span class="tag" style="background: var(--qz-amber-light); color: var(--qz-amber);">In Progress</span>
             </div>
           </div>
         </div>
       </div>
 
       <!-- ========================================== -->
-      <!-- TAB 2: STUDENT ROSTER                      -->
+      <!-- TAB 2: REVERSE TALENT SEARCH               -->
       <!-- ========================================== -->
-      <div id="roster" class="tab-content">
+      <div id="search" class="tab-content">
         <div class="verification-bar">
-          <div><span style="color: var(--qz-text-muted);">ROSTER_SYNC:</span> <span style="color: var(--qz-primary);">CAMPUS_ERP_DB</span></div>
-          <div><span style="color: var(--qz-text-muted);">TOTAL_RECORDS:</span> <span style="color: var(--qz-text-main);">340 STUDENTS</span></div>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; gap: 14px;">
-          <div>
-            <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Student Roster</h1>
-            <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Cross-branch academic performance and verified industry competency indexes.</p>
-          </div>
-          <div style="display: flex; gap: 10px; width: 100%; max-width: 320px;">
-            <input type="text" id="roster-search" class="input-field" placeholder="Search candidate or roll..." onkeyup="filterRoster()">
-          </div>
-        </div>
-
-        <div class="card" style="padding: 0; overflow-x: auto;">
-          <table id="roster-table">
-            <thead>
-              <tr style="background: rgba(255,255,255,0.02);">
-                <th>Candidate Name</th>
-                <th>Branch</th>
-                <th>CGPA</th>
-                <th>Overall Fit</th>
-                <th>Hiring Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Aarav Sharma</strong><br><span style="font-size: 0.75rem; color: var(--qz-text-muted);">2026CSE104</span></td>
-                <td>CSE</td>
-                <td><strong style="color: var(--qz-primary);">8.64</strong></td>
-                <td><span style="color: var(--qz-primary); font-weight: 800;">88%</span></td>
-                <td><span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Interviewing</span></td>
-                <td><button class="btn btn-outline btn-sm" onclick="openDossier('Aarav Sharma', '2026CSE104', 'CSE', '8.64', '88%', 'Interviewing (Razorpay, Amazon)')">View Dossier</button></td>
-              </tr>
-              <tr>
-                <td><strong>Priya Patel</strong><br><span style="font-size: 0.75rem; color: var(--qz-text-muted);">2026IT052</span></td>
-                <td>IT</td>
-                <td><strong style="color: var(--qz-primary);">9.12</strong></td>
-                <td><span style="color: var(--qz-primary); font-weight: 800;">94%</span></td>
-                <td><span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Placed</span></td>
-                <td><button class="btn btn-outline btn-sm" onclick="openDossier('Priya Patel', '2026IT052', 'IT', '9.12', '94%', 'Placed at Microsoft (₹24 LPA)')">View Dossier</button></td>
-              </tr>
-              <tr>
-                <td><strong>Rahul Verma</strong><br><span style="font-size: 0.75rem; color: var(--qz-text-muted);">2026ECE089</span></td>
-                <td>ECE</td>
-                <td><strong style="color: var(--qz-amber);">7.20</strong></td>
-                <td><span style="color: var(--qz-amber); font-weight: 800;">58%</span></td>
-                <td><span class="tag" style="background: var(--qz-amber-light); color: var(--qz-amber);">Training</span></td>
-                <td><button class="btn btn-outline btn-sm" onclick="openDossier('Rahul Verma', '2026ECE089', 'ECE', '7.20', '58%', 'Enrolled in Bridge Track')">View Dossier</button></td>
-              </tr>
-              <tr>
-                <td><strong>Neha Kulkarni</strong><br><span style="font-size: 0.75rem; color: var(--qz-text-muted);">2026CSE201</span></td>
-                <td>CSE</td>
-                <td><strong style="color: var(--qz-primary);">8.90</strong></td>
-                <td><span style="color: var(--qz-primary); font-weight: 800;">84%</span></td>
-                <td><span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Interviewing</span></td>
-                <td><button class="btn btn-outline btn-sm" onclick="openDossier('Neha Kulkarni', '2026CSE201', 'CSE', '8.90', '84%', 'Interviewing (Google)')">View Dossier</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div id="dossier-card" class="card" style="display: none; border-color: var(--qz-primary); animation: fadeIn 0.3s ease;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-            <div>
-              <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary); margin-bottom: 8px;">Official Dossier</span>
-              <h2 id="dos-name" style="font-size: 1.6rem; font-weight: 900; color: var(--qz-text-main);">-</h2>
-              <p id="dos-meta" style="font-size: 0.85rem; color: var(--qz-text-muted);">-</p>
-            </div>
-            <button class="btn btn-outline btn-sm" onclick="closeDossier()">✕ Close</button>
-          </div>
-          <div class="grid-3" style="margin-bottom: 16px;">
-            <div style="padding: 12px; border: 1px solid var(--qz-border); border-radius: var(--radius-sm);"><span style="color: var(--qz-text-muted); font-size: 0.8rem;">Institutional CGPA</span><div id="dos-cgpa" style="font-size: 1.5rem; font-weight: 900; color: var(--qz-primary);">-</div></div>
-            <div style="padding: 12px; border: 1px solid var(--qz-border); border-radius: var(--radius-sm);"><span style="color: var(--qz-text-muted); font-size: 0.8rem;">Industry Match Fit</span><div id="dos-fit" style="font-size: 1.5rem; font-weight: 900; color: var(--qz-text-main);">-</div></div>
-            <div style="padding: 12px; border: 1px solid var(--qz-border); border-radius: var(--radius-sm);"><span style="color: var(--qz-text-muted); font-size: 0.8rem;">Placement Stage</span><div id="dos-status" style="font-size: 1.1rem; font-weight: 800; color: var(--qz-amber); margin-top: 4px;">-</div></div>
-          </div>
-          <button class="btn btn-primary btn-sm" onclick="alert('Digital Dossier verified & saved.')">Endorse Candidate</button>
-        </div>
-      </div>
-
-      <!-- ========================================== -->
-      <!-- TAB 3: INDUSTRY DEMANDS                    -->
-      <!-- ========================================== -->
-      <div id="demands" class="tab-content">
-        <div class="verification-bar">
-          <div><span style="color: var(--qz-text-muted);">SOURCE:</span> <span style="color: var(--qz-primary);">42 CORPORATE PARTNERS</span></div>
-          <div><span style="color: var(--qz-text-muted);">TARGET_CYCLE:</span> <span style="color: var(--qz-text-main);">FALL 2026 CAMPUS DRIVES</span></div>
+          <div><span style="color: var(--qz-text-muted);">TALENT_RADAR:</span> <span style="color: var(--qz-primary);">INDEXING VERIFIED PROFILES</span></div>
+          <div><span style="color: var(--qz-text-muted);">ALGORITHM:</span> <span style="color: var(--qz-primary);">TRUST_SCORE_RANKED</span></div>
         </div>
 
         <div style="margin-bottom: 24px;">
-          <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Industry Demands</h1>
-          <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Empirical technical criteria mandated by registered hiring managers.</p>
+          <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Reverse Talent Search</h1>
+          <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Filter candidates by certified skills validated by academic faculty and technical lab assessments[cite: 1].</p>
+        </div>
+
+        <div class="card" style="margin-bottom: 24px;">
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <input type="text" id="talent-query" class="input-field" value="Java, Spring Boot, SQL, Docker" style="margin: 0; flex: 1; min-width: 250px;" placeholder="Search required skills...">
+            <button class="btn btn-primary" onclick="runTalentSearch()">Filter Candidates</button>
+          </div>
+        </div>
+
+        <div id="talent-results-container">
+          <!-- Candidate 1 -->
+          <div class="card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--qz-text-main);">Aarav Sharma</h3>
+                <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary); border: 1px solid var(--qz-primary);">91% Skill Match</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 600;">NIT Surat • B.Tech CSE (2026) • CGPA: 8.64</p>
+              <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+                <span class="tag" style="background: rgba(255,255,255,0.04); color: var(--qz-primary);">Verified: Java (90%)</span>
+                <span class="tag" style="background: rgba(255,255,255,0.04); color: var(--qz-primary);">Verified: SQL (85%)</span>
+                <span class="tag" style="background: rgba(255,255,255,0.04); color: var(--qz-amber);">Self-Reported: Docker</span>
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="scheduleDirectInterview(this, 'Aarav Sharma')">Schedule Interview</button>
+          </div>
+
+          <!-- Candidate 2 -->
+          <div class="card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--qz-text-main);">Neha Kulkarni</h3>
+                <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary); border: 1px solid var(--qz-primary);">84% Skill Match</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted); font-weight: 600;">NIT Surat • B.Tech CSE (2026) • CGPA: 8.90</p>
+              <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+                <span class="tag" style="background: rgba(255,255,255,0.04); color: var(--qz-primary);">Verified: Docker (80%)</span>
+                <span class="tag" style="background: rgba(255,255,255,0.04); color: var(--qz-primary);">Verified: Spring Boot (82%)</span>
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="scheduleDirectInterview(this, 'Neha Kulkarni')">Schedule Interview</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- TAB 3: ACTIVE JOB POSTINGS                 -->
+      <!-- ========================================== -->
+      <div id="jobs" class="tab-content">
+        <div class="verification-bar">
+          <div><span style="color: var(--qz-text-muted);">POSTINGS_ROUTER:</span> <span style="color: var(--qz-primary);">ACTIVE</span></div>
+          <div><span style="color: var(--qz-text-muted);">AUTO_SKILL_BENCHMARK:</span> <span style="color: var(--qz-primary);">STRICT</span></div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Active Job Postings</h1>
+            <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Manage engineering requisitions and benchmark criteria[cite: 1].</p>
+          </div>
+          <button class="btn btn-primary" onclick="toggleRoleCreator(true)">+ Publish New Requisition</button>
+        </div>
+
+        <div id="role-creator-drawer" class="card" style="display: none; border-color: var(--qz-primary); animation: fadeIn 0.3s ease;">
+          <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 16px;">Create Engineering Role</h2>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Role Title</label>
+              <input type="text" id="new-job-title" class="input-field" placeholder="e.g. Distributed Systems Engineer">
+            </div>
+            <div class="form-group">
+              <label>Annual Compensation (CTC)</label>
+              <input type="text" id="new-job-ctc" class="input-field" placeholder="e.g. ₹18.0 - 24.0 LPA">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Mandatory Verified Skills (Comma Separated)</label>
+            <input type="text" id="new-job-skills" class="input-field" placeholder="e.g. Java, Spring Boot, PostgreSQL">
+          </div>
+          <div style="display: flex; gap: 12px; justify-content: flex-end;">
+            <button class="btn btn-outline" onclick="toggleRoleCreator(false)">Cancel</button>
+            <button class="btn btn-primary" onclick="publishNewRole()">Publish Role to Campuses</button>
+          </div>
+        </div>
+
+        <div id="active-jobs-list" class="grid-2">
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Full-Time Placement</span>
+              <strong style="font-size: 0.85rem; color: var(--qz-primary);">42 Applicants</strong>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 900; margin-bottom: 4px;">Backend Engineering Intern / PPO</h3>
+            <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Remote / Bengaluru • ₹35,000/mo stipend (₹22 LPA PPO)</p>
+            <button class="btn btn-outline" style="width: 100%;" onclick="alert('Accessing candidate application submissions...')">Review Pipeline Dashboard</button>
+          </div>
+
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Permanent Role</span>
+              <strong style="font-size: 0.85rem; color: var(--qz-primary);">78 Applicants</strong>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 900; margin-bottom: 4px;">Cloud Infrastructure Associate</h3>
+            <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Bengaluru HQ • ₹16.0 - 20.0 LPA</p>
+            <button class="btn btn-outline" style="width: 100%;" onclick="alert('Accessing candidate application submissions...')">Review Pipeline Dashboard</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- TAB 4: INTERVIEWS                          -->
+      <!-- ========================================== -->
+      <div id="interviews" class="tab-content">
+        <div class="verification-bar">
+          <div><span style="color: var(--qz-text-muted);">CALL_BRIDGE:</span> <span style="color: var(--qz-primary);">ENCRYPTED_WEBRTC</span></div>
+          <div><span style="color: var(--qz-text-muted);">ASSESSMENT_MODE:</span> <span style="color: var(--qz-primary);">LIVE_CODE_SANDBOX</span></div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Scheduled Interviews</h1>
+          <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Technical assessments and real-time pair programming slots[cite: 1].</p>
+        </div>
+
+        <div class="card" style="border-left: 4px solid var(--qz-primary);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--qz-text-main);">Aarav Sharma — Technical Round 1</h3>
+                <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Confirmed</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted);">Role: Backend Engineering Intern • Today at 2:00 PM IST</p>
+            </div>
+            <button class="btn btn-primary" onclick="alert('Initializing encrypted SkillBridge WebRTC video room & shared coding sandbox...')">Join Video Call</button>
+          </div>
+        </div>
+
+        <div class="card" style="border-left: 4px solid var(--qz-amber);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--qz-text-main);">Neha Kulkarni — System Architecture</h3>
+                <span class="tag" style="background: var(--qz-amber-light); color: var(--qz-amber);">In 2 Days</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--qz-text-muted);">Role: Cloud Infrastructure • Sept 10, 2026 at 4:30 PM IST</p>
+            </div>
+            <button class="btn btn-outline" onclick="alert('Interview calendar invitation sent.')">Reschedule</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- TAB 5: CAMPUS DRIVES                       -->
+      <!-- ========================================== -->
+      <div id="drives" class="tab-content">
+        <div class="verification-bar">
+          <div><span style="color: var(--qz-text-muted);">PARTNERED_COLLEGES:</span> <span style="color: var(--qz-primary);">14 INSTITUTES</span></div>
+          <div><span style="color: var(--qz-text-muted);">HIRING_SEASON:</span> <span style="color: var(--qz-text-main);">FALL 2026 TIER-1</span></div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Campus Drives</h1>
+          <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Manage dedicated university hiring slots and on-campus visit schedules[cite: 1].</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary); margin-bottom: 8px;">Tier-1 Dedicated Slot</span>
+            <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 4px;">National Institute of Technology (NIT Surat)</h3>
+            <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Scheduled Date: Sept 18, 2026 • 42 Filtered Candidates</p>
+            <button class="btn btn-outline" style="width: 100%;" onclick="alert('Opening candidate filtering portal for NIT Surat...')">Review Pre-Filtered Batch</button>
+          </div>
+
+          <div class="card" style="border: 1px dashed var(--qz-border);">
+            <span class="tag" style="background: rgba(255,255,255,0.05); color: var(--qz-text-muted); margin-bottom: 8px;">Booking Open</span>
+            <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 4px;">IIT Gandhinagar Tech Drive</h3>
+            <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Available Slots: Oct 2 - Oct 5, 2026</p>
+            <button class="btn btn-primary" style="width: 100%;" onclick="alert('Booking request dispatched to College TPO Dean.')">Request Dedicated Slot</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- TAB 6: OFFERS & ONBOARDING                 -->
+      <!-- ========================================== -->
+      <div id="offers" class="tab-content">
+        <div class="verification-bar">
+          <div><span style="color: var(--qz-text-muted);">LETTER_ENGINE:</span> <span style="color: var(--qz-primary);">DIGITALLY_SIGNED</span></div>
+          <div><span style="color: var(--qz-text-muted);">PARCHMENT_DISPATCH:</span> <span style="color: var(--qz-primary);">INSTANT_TRANSMIT</span></div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Offers &amp; Onboarding</h1>
+          <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Rolled out digital offer letters and compliance status[cite: 1].</p>
         </div>
 
         <div class="card" style="padding: 0; overflow-x: auto;">
           <table>
             <thead>
               <tr style="background: rgba(255,255,255,0.02);">
-                <th>Skill / Technology</th>
-                <th>Corporate Demand</th>
-                <th>Campus Verification Rate</th>
-                <th>Action Recommendation</th>
+                <th>Candidate</th>
+                <th>Role Offered</th>
+                <th>Package Band</th>
+                <th>Status</th>
+                <th>Digital Letter</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>Spring Boot &amp; Java Microservices</strong></td>
-                <td>32 Partner Companies</td>
-                <td><strong style="color: var(--qz-primary);">90% Mastered</strong></td>
-                <td><span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Curriculum Optimal</span></td>
+                <td><strong>Priya Patel</strong><br><span style="font-size: 0.75rem; color: var(--qz-text-muted);">NIT Surat • IT</span></td>
+                <td>Backend Engineer</td>
+                <td>₹22.0 LPA</td>
+                <td><span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Accepted ✓</span></td>
+                <td><button class="btn btn-outline btn-sm" onclick="alert('Viewing cryptographically signed offer letter #SB-RZ-8802')">View Letter</button></td>
               </tr>
               <tr>
-                <td><strong>Docker &amp; Container Orchestration</strong></td>
-                <td>26 Partner Companies</td>
-                <td><strong style="color: var(--qz-rose);">28% Mastered</strong></td>
-                <td><span class="tag" style="background: var(--qz-rose-light); color: var(--qz-rose);">Bridge Course Injected</span></td>
-              </tr>
-              <tr>
-                <td><strong>Relational Database Performance (SQL)</strong></td>
-                <td>38 Partner Companies</td>
-                <td><strong style="color: var(--qz-primary);">85% Mastered</strong></td>
-                <td><span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Curriculum Optimal</span></td>
-              </tr>
-              <tr>
-                <td><strong>Next.js &amp; Modern Frontend</strong></td>
-                <td>18 Partner Companies</td>
-                <td><strong style="color: var(--qz-amber);">52% Mastered</strong></td>
-                <td><span class="tag" style="background: var(--qz-amber-light); color: var(--qz-amber);">Lab Assessment Needed</span></td>
+                <td><strong>Siddharth Rao</strong><br><span style="font-size: 0.75rem; color: var(--qz-text-muted);">BITS Pilani • CSE</span></td>
+                <td>Infrastructure Trainee</td>
+                <td>₹18.5 LPA</td>
+                <td><span class="tag" style="background: var(--qz-amber-light); color: var(--qz-amber);">Pending Review</span></td>
+                <td><button class="btn btn-outline btn-sm" onclick="alert('Viewing cryptographically signed offer letter #SB-RZ-8819')">View Letter</button></td>
               </tr>
             </tbody>
           </table>
@@ -642,137 +737,34 @@
       </div>
 
       <!-- ========================================== -->
-      <!-- TAB 4: CAMPUS DRIVES                       -->
+      <!-- TAB 7: COMPANY PROFILE                     -->
       <!-- ========================================== -->
-      <div id="drives" class="tab-content">
+      <div id="profile" class="tab-content">
         <div class="verification-bar">
-          <div><span style="color: var(--qz-text-muted);">SCHEDULE:</span> <span style="color: var(--qz-primary);">ACTIVE PLACEMENT CALENDAR</span></div>
-          <div><span style="color: var(--qz-text-muted);">TOTAL_DRIVES:</span> <span style="color: var(--qz-text-main);">12 CONFIRMED</span></div>
+          <div><span style="color: var(--qz-text-muted);">EMPLOYER_BRAND:</span> <span style="color: var(--qz-primary);">VERIFIED</span></div>
+          <div><span style="color: var(--qz-text-muted);">PORTAL_VISIBILITY:</span> <span style="color: var(--qz-primary);">ALL_PARTNER_COLLEGES</span></div>
         </div>
 
         <div style="margin-bottom: 24px;">
-          <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Upcoming Campus Drives</h1>
-          <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Scheduled recruiter drives and on-campus selection interviews.</p>
+          <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Company Profile &amp; Culture</h1>
+          <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Manage Razorpay's recruiter showcase displayed on student portals[cite: 1].</p>
         </div>
 
-        <div class="grid-2">
-          <div class="card">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-              <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Confirmed</span>
-              <strong style="font-size: 0.85rem; color: var(--qz-primary);">Sept 10, 2026</strong>
-            </div>
-            <h3 style="font-size: 1.3rem; font-weight: 900; margin-bottom: 4px;">Amazon SDE-1 Placement Drive</h3>
-            <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Target: CSE &amp; IT • Package: ₹28.5 LPA</p>
-            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 12px;">
-              <span>Batch Eligibility Cleared:</span>
-              <strong style="color: var(--qz-primary);">80 Candidates</strong>
-            </div>
-            <button class="btn btn-outline" style="width: 100%;" onclick="alert('Dispatching pre-drive briefing packets.')">Dispatch Student Briefing</button>
-          </div>
-
-          <div class="card">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-              <span class="tag" style="background: var(--qz-amber-light); color: var(--qz-amber);">Documentation Pending</span>
-              <strong style="font-size: 0.85rem; color: var(--qz-amber);">Sept 18, 2026</strong>
-            </div>
-            <h3 style="font-size: 1.3rem; font-weight: 900; margin-bottom: 4px;">Razorpay Core Platform Hiring</h3>
-            <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Target: B.Tech Full Cohort • Package: ₹22.0 LPA</p>
-            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 12px;">
-              <span>Batch Eligibility Cleared:</span>
-              <strong style="color: var(--qz-primary);">42 Candidates</strong>
-            </div>
-            <button class="btn btn-outline" style="width: 100%;" onclick="alert('Opening candidate filtering portal...')">Filter Candidate Pool</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ========================================== -->
-      <!-- TAB 5: ALUMNI NETWORK                      -->
-      <!-- ========================================== -->
-      <div id="alumni" class="tab-content">
-        <div class="verification-bar">
-          <div><span style="color: var(--qz-text-muted);">ALUMNI_GRAPH:</span> <span style="color: var(--qz-primary);">ONLINE</span></div>
-          <div><span style="color: var(--qz-text-muted);">OUTCOMES_SURVEY:</span> <span style="color: var(--qz-amber);">IN PROGRESS</span></div>
-        </div>
-
-        <div style="margin-bottom: 24px;">
-          <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Alumni Network</h1>
-          <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Post-placement verification, career mobility, and mentorship tracking.</p>
-        </div>
-
-        <div class="card" style="text-align: center; padding: 48px 24px; border: 1px dashed var(--qz-border);">
-          <div style="font-size: 3rem; margin-bottom: 16px;">🎓</div>
-          <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 8px;">Active Verification Wave (Batch of 2025)</h3>
-          <p style="color: var(--qz-text-muted); font-size: 0.92rem; max-width: 440px; margin: 0 auto 24px; line-height: 1.6;">
-            The 2025 graduate employment review cycle is ongoing. Outcomes will be merged directly into your NIRF reporting framework upon submission.
-          </p>
-          <button class="btn btn-primary" onclick="alert('Invitation link generated: skillbridge.edu/alumni-portal/invite-2025')">Send Alumni Engagement Invitations</button>
-        </div>
-      </div>
-
-      <!-- ========================================== -->
-      <!-- TAB 6: COMPLIANCE REPORTS                  -->
-      <!-- ========================================== -->
-      <div id="reports" class="tab-content">
-        <div class="verification-bar">
-          <div><span style="color: var(--qz-text-muted);">REGULATORY_ENGINE:</span> <span style="color: var(--qz-primary);">AICTE_NIRF_READY</span></div>
-          <div><span style="color: var(--qz-text-muted);">AUDIT_LOGS:</span> <span style="color: var(--qz-primary);">CRYPTOGRAPHICALLY_SIGNED</span></div>
-        </div>
-
-        <div style="margin-bottom: 24px;">
-          <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Compliance Reports</h1>
-          <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Generate institutional placement verification artifacts for regulatory submission.</p>
-        </div>
-
-        <div class="grid-2">
-          <div class="card">
-            <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 6px;">NIRF Metric Table (GO &amp; GPH)</h3>
-            <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Full documentation of graduating students, median salaries, and higher education cohorts.</p>
-            <button class="btn btn-primary" style="width: 100%;" onclick="alert('Generating official NIRF 2026 data sheets...')">Download NIRF Dataset (.XLSX)</button>
-          </div>
-
-          <div class="card">
-            <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 6px;">AICTE Mandatory Disclosure</h3>
-            <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Institutional placement rates, visiting corporations, and accredited program statistics.</p>
-            <button class="btn btn-outline" style="width: 100%;" onclick="alert('Exporting AICTE compliance packet (.PDF)...')">Generate AICTE Disclosure PDF</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ========================================== -->
-      <!-- TAB 7: MASS COMMUNICATIONS                 -->
-      <!-- ========================================== -->
-      <div id="comms" class="tab-content">
-        <div class="verification-bar">
-          <div><span style="color: var(--qz-text-muted);">DISPATCH_ENGINE:</span> <span style="color: var(--qz-primary);">SMS_EMAIL_GATEWAY</span></div>
-          <div><span style="color: var(--qz-text-muted);">TARGET_AUDIENCE:</span> <span style="color: var(--qz-primary);">COHORT 2026</span></div>
-        </div>
-
-        <div style="margin-bottom: 24px;">
-          <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Mass Communications</h1>
-          <p style="color: var(--qz-text-muted); font-size: 0.95rem;">Transmit mandatory drive notices and skill alerts directly to student portals.</p>
-        </div>
-
-        <div class="card" style="max-width: 700px;">
+        <div class="card" style="max-width: 800px;">
           <div class="form-group">
-            <label>Target Audience Segment</label>
-            <select class="input-field" id="comms-segment" style="background: var(--qz-surface);">
-              <option value="all">All Eligible Students (CGPA &gt; 7.5)</option>
-              <option value="cse">CSE Department Only</option>
-              <option value="it">IT Department Only</option>
-              <option value="deficit">Students with Docker &amp; Cloud Gaps</option>
-            </select>
+            <label>Organization Name</label>
+            <input type="text" class="input-field" value="Razorpay Software Private Limited">
           </div>
           <div class="form-group">
-            <label>Notification Headline</label>
-            <input type="text" class="input-field" id="comms-title" placeholder="e.g. Mandatory Briefing: Amazon Campus Drive">
+            <label>Primary Tech Stack Tagline</label>
+            <input type="text" class="input-field" value="High-throughput FinTech Architecture • Go, Java, AWS, Kubernetes">
           </div>
           <div class="form-group">
-            <label>Message Content (Email &amp; In-App Notification)</label>
-            <textarea class="input-field" id="comms-body" rows="4" placeholder="Type notice here..."></textarea>
+            <label>Company Culture &amp; Engineering Philosophy</label>
+            <textarea class="input-field" rows="4">We power millions of businesses across India with financial infrastructure. We value clean code, deep understanding of relational transactions, and engineers who build resilient distributed systems.</textarea>
           </div>
           <div style="text-align: right; border-top: 1px solid var(--qz-border); padding-top: 18px;">
-            <button class="btn btn-primary" onclick="broadcastNotice()">Broadcast Institutional Alert</button>
+            <button class="btn btn-primary" onclick="alert('Company profile & student-facing branding synchronized successfully!')">Save Profile</button>
           </div>
         </div>
       </div>
@@ -783,114 +775,94 @@
       <div id="welcome-screen" class="tab-content default-tab hero-layout">
         <div class="hero-content">
           <h1 style="font-size: 3.8rem; font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -0.03em;">
-            Welcome back,<br><span style="color: var(--qz-primary);">Dr. Verma</span>
+            Welcome back,<br><span style="color: var(--qz-primary);">Razorpay HR</span>
           </h1>
           <div style="color: var(--qz-primary); font-size: 1.1rem; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 24px;">
-            COLLEGE ADMIN &amp; PLACEMENT COMMAND
+            VERIFIED TALENT SEARCH &amp; RECRUITER ENGINE
           </div>
           <p style="font-size: 1.05rem; color: var(--qz-text-muted); max-width: 500px; line-height: 1.6; margin-bottom: 40px;">
-            Coordinate university-wide campus hiring, monitor cohort skill deficits, and supervise verified recruiter engagements in real time.
+            Discover campus candidates backed by cryptographically verified skills, schedule video interviews, and dispatch signed offer letters instantly[cite: 1].
           </p>
           <div>
-            <a href="#dashboard" class="btn btn-primary" style="padding: 14px 28px; font-size: 1rem;">Enter TPO Console</a>
+            <a href="#dashboard" class="btn btn-primary" style="padding: 14px 28px; font-size: 1rem;">Enter Recruiter Hub</a>
           </div>
         </div>
 
         <div class="hero-hud card">
-          <div class="hud-element hud-top-left">> INSTITUTION_MATRIX: ONLINE<br>CAMPUS_GRID_HASH: #NIT-4029</div>
-          <div class="hud-element hud-bottom-right">// DIGITAL_TWIN_CAMPUS</div>
+          <div class="hud-element hud-top-left">> RECRUITER_RADAR: ONLINE<br>SEARCH_INDEX: 3,420 GRADUATES</div>
+          <div class="hud-element hud-bottom-right">// TALENT_TRANSMISSION</div>
           
           <div class="hud-coords">
-            LAT_21.1702<br>LON_72.8311<br>STATUS: SYNCHRONIZED
+            CONTRACT_HASH: #OFFER-2026<br>STATUS: DIGITALLY_SIGNED
           </div>
 
           <!-- Radar sweep overlay -->
           <div class="scan-beam"></div>
 
-          <!-- 3D Holographic Isometric College Building Structure -->
-          <div class="college-hologram-stage" title="Click to view campus infrastructure telemetry">
-            <svg class="college-svg-model" viewBox="0 0 320 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- 3D Holographic Floating Letter Scroll Object -->
+          <div class="scroll-hologram-stage" title="Click to view offer parchment telemetries">
+            <svg class="scroll-svg-model" viewBox="0 0 320 300" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
+                <filter id="scroll-glow" x="-20%" y="-20%" width="140%" height="140%">
                   <feGaussianBlur stdDeviation="3.5" result="glow"/>
                   <feMerge>
                     <feMergeNode in="glow"/>
                     <feMergeNode in="SourceGraphic"/>
                   </feMerge>
                 </filter>
-                <linearGradient id="wall-fill" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#00FF66" stop-opacity="0.12"/>
-                  <stop offset="100%" stop-color="#00FF66" stop-opacity="0.02"/>
+                <linearGradient id="parchment-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00FF66" stop-opacity="0.16"/>
+                  <stop offset="50%" stop-color="#090E0C" stop-opacity="0.85"/>
+                  <stop offset="100%" stop-color="#00FF66" stop-opacity="0.10"/>
                 </linearGradient>
-                <linearGradient id="roof-fill" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#00FF66" stop-opacity="0.25"/>
-                  <stop offset="100%" stop-color="#00FF66" stop-opacity="0.05"/>
+                <linearGradient id="roller-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#00FF66" stop-opacity="0.4"/>
+                  <stop offset="50%" stop-color="#00CC52" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#00FF66" stop-opacity="0.4"/>
                 </linearGradient>
               </defs>
 
-              <!-- Isometric Ground Lines -->
-              <g stroke="#00FF66" stroke-opacity="0.3" stroke-width="1" stroke-dasharray="3,3">
-                <line x1="20" y1="230" x2="160" y2="270" />
-                <line x1="300" y1="230" x2="160" y2="270" />
-                <line x1="40" y1="210" x2="160" y2="250" />
-                <line x1="280" y1="210" x2="160" y2="250" />
+              <!-- Top Rolled Cylinder Roller Head -->
+              <ellipse cx="160" cy="55" rx="80" ry="12" fill="url(#roller-grad)" stroke="#00FF66" stroke-width="2" filter="url(#scroll-glow)"/>
+              <ellipse cx="80" cy="55" rx="9" ry="14" fill="#090E0C" stroke="#00FF66" stroke-width="2"/>
+              <ellipse cx="240" cy="55" rx="9" ry="14" fill="#090E0C" stroke="#00FF66" stroke-width="2"/>
+              <circle cx="80" cy="55" r="4" fill="#00FF66"/>
+              <circle cx="240" cy="55" r="4" fill="#00FF66"/>
+
+              <!-- Main Unrolled Letter Parchment Body -->
+              <path d="M80,55 Q160,65 240,55 L234,225 Q160,235 86,225 Z" fill="url(#parchment-grad)" stroke="#00FF66" stroke-width="2" filter="url(#scroll-glow)"/>
+
+              <!-- Bottom Rolled Cylinder Roller Foot -->
+              <ellipse cx="160" cy="225" rx="74" ry="11" fill="url(#roller-grad)" stroke="#00FF66" stroke-width="2"/>
+              <ellipse cx="86" cy="225" rx="8" ry="13" fill="#090E0C" stroke="#00FF66" stroke-width="2"/>
+              <ellipse cx="234" cy="225" rx="8" ry="13" fill="#090E0C" stroke="#00FF66" stroke-width="2"/>
+              <circle cx="86" cy="225" r="3.5" fill="#00FF66"/>
+              <circle cx="234" cy="225" r="3.5" fill="#00FF66"/>
+
+              <!-- Text/Telemetry Lines Inside Letter (Offer Contract Text) -->
+              <line x1="108" y1="85" x2="212" y2="85" stroke="#00FF66" stroke-width="2" stroke-linecap="round" filter="url(#scroll-glow)"/>
+              <line x1="108" y1="98" x2="185" y2="98" stroke="#00FF66" stroke-width="1.4" stroke-opacity="0.7" stroke-linecap="round"/>
+              
+              <!-- Paragraph 1 Lines -->
+              <line x1="105" y1="116" x2="215" y2="116" stroke="#00FF66" stroke-width="1.2" stroke-dasharray="4,2" stroke-opacity="0.8"/>
+              <line x1="105" y1="128" x2="210" y2="128" stroke="#00FF66" stroke-width="1.2" stroke-dasharray="6,3" stroke-opacity="0.8"/>
+              <line x1="105" y1="140" x2="190" y2="140" stroke="#00FF66" stroke-width="1.2" stroke-dasharray="3,2" stroke-opacity="0.8"/>
+
+              <!-- Cryptographic Institutional Seal Stamp (Center-Bottom) -->
+              <g transform="translate(160, 182)">
+                <polygon points="0,-16 11,-11 16,0 11,11 0,16 -11,11 -16,0 -11,-11" stroke="#00FF66" stroke-width="1.6" fill="rgba(0, 255, 102, 0.15)" filter="url(#scroll-glow)"/>
+                <circle cx="0" cy="0" r="10" stroke="#00FF66" stroke-width="1.2" stroke-dasharray="2,2"/>
+                <text x="0" y="4" font-size="9" font-family="'Space Mono', monospace" font-weight="900" fill="#00FF66" text-anchor="middle">S</text>
+                <!-- Seal Ribbon Tails -->
+                <path d="M-6,14 L-10,28 L-4,24 L0,28 L-2,14" fill="#00FF66" fill-opacity="0.3" stroke="#00FF66" stroke-width="1"/>
+                <path d="M6,14 L10,28 L4,24 L0,28 L2,14" fill="#00FF66" fill-opacity="0.3" stroke="#00FF66" stroke-width="1"/>
               </g>
 
-              <!-- Left Wing Structure (Isometric Classroom Block) -->
-              <polygon points="40,165 95,145 95,200 40,220" fill="url(#wall-fill)" stroke="#00FF66" stroke-width="1.8" filter="url(#neon-glow)"/>
-              <polygon points="95,145 130,158 130,212 95,200" fill="url(#wall-fill)" stroke="#00FF66" stroke-width="1.8" filter="url(#neon-glow)"/>
-              <!-- Left Wing Roof -->
-              <polygon points="40,165 95,145 115,128 60,148" fill="url(#roof-fill)" stroke="#00FF66" stroke-width="1.8"/>
-              <!-- Left Wing Windows (Arched) -->
-              <path d="M55,182 Q55,174 62,174 Q69,174 69,182 L69,195 L55,195 Z" stroke="#00FF66" stroke-width="1.2" fill="none"/>
-              <path d="M75,175 Q75,167 82,167 Q89,167 89,175 L89,188 L75,188 Z" stroke="#00FF66" stroke-width="1.2" fill="none"/>
-              <path d="M106,168 Q106,162 112,164 Q118,166 118,172 L118,183 L106,179 Z" stroke="#00FF66" stroke-width="1.2" fill="none"/>
-
-              <!-- Right Wing Structure (Isometric Lab Block) -->
-              <polygon points="225,145 280,165 280,220 225,200" fill="url(#wall-fill)" stroke="#00FF66" stroke-width="1.8" filter="url(#neon-glow)"/>
-              <polygon points="190,158 225,145 225,200 190,212" fill="url(#wall-fill)" stroke="#00FF66" stroke-width="1.8" filter="url(#neon-glow)"/>
-              <!-- Right Wing Roof -->
-              <polygon points="225,145 280,165 260,148 205,128" fill="url(#roof-fill)" stroke="#00FF66" stroke-width="1.8"/>
-              <!-- Right Wing Windows (Arched) -->
-              <path d="M251,182 Q251,174 258,174 Q265,174 265,182 L265,195 L251,195 Z" stroke="#00FF66" stroke-width="1.2" fill="none"/>
-              <path d="M231,175 Q231,167 238,167 Q245,167 245,175 L245,188 L231,188 Z" stroke="#00FF66" stroke-width="1.2" fill="none"/>
-              <path d="M202,172 Q202,166 208,164 Q214,162 214,168 L214,179 L202,183 Z" stroke="#00FF66" stroke-width="1.2" fill="none"/>
-
-              <!-- Central Administrative Building Base -->
-              <polygon points="115,150 160,135 205,150 205,225 160,240 115,225" fill="url(#wall-fill)" stroke="#00FF66" stroke-width="2" filter="url(#neon-glow)"/>
-              <line x1="160" y1="135" x2="160" y2="240" stroke="#00FF66" stroke-width="1.5"/>
-
-              <!-- Classical Portico / Pediment (Triangular College Front) -->
-              <polygon points="135,175 160,155 185,175" fill="url(#roof-fill)" stroke="#00FF66" stroke-width="1.8" filter="url(#neon-glow)"/>
-              <!-- Columns -->
-              <line x1="142" y1="175" x2="142" y2="225" stroke="#00FF66" stroke-width="2"/>
-              <line x1="152" y1="172" x2="152" y2="228" stroke="#00FF66" stroke-width="1.8"/>
-              <line x1="168" y1="172" x2="168" y2="228" stroke="#00FF66" stroke-width="1.8"/>
-              <line x1="178" y1="175" x2="178" y2="225" stroke="#00FF66" stroke-width="2"/>
-
-              <!-- Main Entrance Arch Door -->
-              <path d="M154,233 Q154,218 160,218 Q166,218 166,233 L166,238 L154,236 Z" stroke="#00FF66" stroke-width="1.5" fill="rgba(0, 255, 102, 0.2)"/>
-
-              <!-- Grand Steps to Entrance -->
-              <polygon points="138,228 160,236 182,228 186,232 160,241 134,232" fill="none" stroke="#00FF66" stroke-width="1.2"/>
-              <polygon points="130,233 160,244 190,233 194,238 160,249 126,238" fill="none" stroke="#00FF66" stroke-width="1.2"/>
-
-              <!-- Central Clock Tower Body -->
-              <polygon points="142,95 160,86 178,95 178,140 160,148 142,140" fill="url(#wall-fill)" stroke="#00FF66" stroke-width="2" filter="url(#neon-glow)"/>
-              <line x1="160" y1="86" x2="160" y2="148" stroke="#00FF66" stroke-width="1.2"/>
-
-              <!-- Holographic Clock Face (Central Tower) -->
-              <circle cx="160" cy="115" r="9" stroke="#00FF66" stroke-width="1.5" fill="rgba(0, 255, 102, 0.15)"/>
-              <line x1="160" y1="115" x2="160" y2="109" stroke="#00FF66" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="160" y1="115" x2="164" y2="117" stroke="#00FF66" stroke-width="1.5" stroke-linecap="round"/>
-
-              <!-- Tower Pyramid Spire Roof & Beacon -->
-              <polygon points="142,95 160,86 178,95 160,42" fill="url(#roof-fill)" stroke="#00FF66" stroke-width="2" filter="url(#neon-glow)"/>
-              <line x1="160" y1="42" x2="160" y2="86" stroke="#00FF66" stroke-width="1.2"/>
-              <!-- Spire Top Antenna & Telemetry Beacon Node -->
-              <line x1="160" y1="42" x2="160" y2="24" stroke="#00FF66" stroke-width="2"/>
-              <circle cx="160" cy="22" r="3.5" fill="#00FF66" filter="url(#neon-glow)"/>
-              <circle cx="160" cy="22" r="7" stroke="#00FF66" stroke-width="0.8" stroke-dasharray="2,2"/>
+              <!-- Isometric Floating Particles -->
+              <circle cx="95" cy="40" r="1.5" fill="#00FF66"/>
+              <circle cx="230" cy="38" r="2" fill="#00FF66" filter="url(#scroll-glow)"/>
+              <circle cx="70" cy="180" r="1.5" fill="#00FF66"/>
+              <circle cx="250" cy="190" r="2" fill="#00FF66"/>
             </svg>
           </div>
 
@@ -906,67 +878,66 @@
   <!-- FOOTER                                     -->
   <!-- ========================================== -->
   <footer style="border-top: 1px solid var(--qz-border); padding: 16px 32px; font-size: 0.8rem; color: var(--qz-text-muted); background: var(--qz-surface); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-    <div>SkillBridge v2.6 • Institutional TPO Administrative Node</div>
-    <div>Sync Status: 100% Operational (Latency: 18ms)</div>
+    <div>SkillBridge v2.6 • Recruiter Hub &amp; Talent Engine</div>
+    <div>Radar Status: 100% Operational (Latency: 14ms)</div>
   </footer>
 
   <!-- ========================================== -->
   <!-- JAVASCRIPT STATE ENGINE                    -->
   <!-- ========================================== -->
   <script>
-    function injectBridgeCourse() {
-      const btn = document.getElementById('inject-btn');
-      btn.innerText = "Transmitting Course Modules...";
-      btn.classList.add("btn-disabled");
-      btn.disabled = true;
-
-      setTimeout(() => {
-        alert("Success: 'Docker & AWS ECS Foundations' has been injected into 245 flagged student dashboards as a mandatory credit module.");
-        btn.innerText = "Bridge Course Active ✓";
-        btn.style.background = "transparent";
-        btn.style.color = "var(--qz-primary)";
-        btn.style.borderColor = "var(--qz-primary)";
-      }, 900);
+    function runTalentSearch() {
+      const q = document.getElementById('talent-query').value.trim();
+      if (!q) {
+        alert("Please enter target technical skills to search.");
+        return;
+      }
+      alert(`Querying verified student database for: "${q}"... Found 2 matches.`);
     }
 
-    function filterRoster() {
-      const input = document.getElementById('roster-search').value.toLowerCase();
-      const table = document.getElementById('roster-table');
-      const rows = table.getElementsByTagName('tr');
+    function scheduleDirectInterview(btnElement, candidateName) {
+      btnElement.innerText = "Interview Scheduled ✓";
+      btnElement.style.background = "transparent";
+      btnElement.style.color = "var(--qz-primary)";
+      btnElement.style.borderColor = "var(--qz-primary)";
+      btnElement.disabled = true;
 
-      for (let i = 1; i < rows.length; i++) {
-        const text = rows[i].textContent.toLowerCase();
-        rows[i].style.display = text.includes(input) ? '' : 'none';
+      alert(`Interview Invitation dispatched to ${candidateName}. WebRTC room created.`);
+    }
+
+    function toggleRoleCreator(show) {
+      document.getElementById('role-creator-drawer').style.display = show ? 'block' : 'none';
+      if (show) {
+        document.getElementById('role-creator-drawer').scrollIntoView({ behavior: 'smooth' });
       }
     }
 
-    function openDossier(name, roll, branch, cgpa, fit, status) {
-      document.getElementById('dos-name').innerText = name;
-      document.getElementById('dos-meta').innerText = `Roll No: ${roll} • Branch: ${branch}`;
-      document.getElementById('dos-cgpa').innerText = cgpa;
-      document.getElementById('dos-fit').innerText = fit;
-      document.getElementById('dos-status').innerText = status;
-      document.getElementById('dossier-card').style.display = 'block';
-      document.getElementById('dossier-card').scrollIntoView({ behavior: 'smooth' });
-    }
+    function publishNewRole() {
+      const title = document.getElementById('new-job-title').value.trim();
+      const ctc = document.getElementById('new-job-ctc').value.trim();
+      const skills = document.getElementById('new-job-skills').value.trim();
 
-    function closeDossier() {
-      document.getElementById('dossier-card').style.display = 'none';
-    }
-
-    function broadcastNotice() {
-      const title = document.getElementById('comms-title').value.trim();
-      const body = document.getElementById('comms-body').value.trim();
-      const seg = document.getElementById('comms-segment').value;
-
-      if (!title || !body) {
-        alert("Please provide both a headline and notice body before dispatching.");
+      if (!title || !ctc) {
+        alert("Please provide at least a Role Title and Compensation Band.");
         return;
       }
 
-      alert(`Alert Broadcast Dispatched!\nAudience: ${seg.toUpperCase()}\nHeadline: ${title}`);
-      document.getElementById('comms-title').value = '';
-      document.getElementById('comms-body').value = '';
+      const container = document.getElementById('active-jobs-list');
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">Newly Published</span>
+          <strong style="font-size: 0.85rem; color: var(--qz-primary);">0 Applicants</strong>
+        </div>
+        <h3 style="font-size: 1.3rem; font-weight: 900; margin-bottom: 4px;">${title}</h3>
+        <p style="font-size: 0.85rem; color: var(--qz-text-muted); margin-bottom: 16px;">Campus Placement • ${ctc}</p>
+        <button class="btn btn-outline" style="width: 100%;" onclick="alert('Accessing candidate application submissions...')">Review Pipeline Dashboard</button>
+      `;
+
+      container.prepend(card);
+      toggleRoleCreator(false);
+      alert(`Requisition for "${title}" published across all partnered university campuses!`);
     }
 
     document.querySelectorAll('nav a').forEach(link => {
