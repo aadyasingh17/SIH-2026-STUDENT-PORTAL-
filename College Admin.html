@@ -976,6 +976,42 @@
         }
       });
     });
+
+    async function loadRealRoster() {
+  const token = localStorage.getItem('college_token');
+  if (!token) return;
+
+  try {
+    const res = await fetch('http://localhost:5000/api/college/students', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const result = await res.json();
+    if (result.status !== 'success') return;
+
+    const tbody = document.querySelector('#roster-table tbody');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+
+    (result.students || []).forEach(s => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td><strong>${s.name || '-'}</strong><br><span style="font-size: 0.75rem; color: var(--qz-text-muted);">${s.roll_no || '-'}</span></td>
+        <td>${s.branch || '-'}</td>
+        <td><strong style="color: var(--qz-primary);">-</strong></td>
+        <td>-</td>
+        <td><span class="tag" style="background: var(--qz-primary-light); color: var(--qz-primary);">${s.is_verified ? 'Verified' : 'Pending'}</span></td>
+        <td>${s.email || '-'}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  } catch (err) {
+    console.error('Roster load failed:', err);
+  }
+}
+
+loadRealRoster();
+
   </script>
 
 </body>

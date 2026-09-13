@@ -2,7 +2,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const supabase = require('../config/supabaseClient');
-const authMiddleware = require('../src/middlewares/authMiddleware');
+const verifySupabaseStudent = require('../src/middlewares/verifySupabaseStudent');
 const requireRole = require('../src/middlewares/requireRole');
 
 const router = express.Router();
@@ -1654,95 +1654,95 @@ router.post('/login', loginStudent);
 router.post('/api/student/login', loginStudent);
 
 // 2. Profile (Protected)
-router.get('/profile', authMiddleware, getStudentProfile);
-router.get('/api/student/profile', authMiddleware, getStudentProfile);
-router.put('/profile', authMiddleware, updateStudentProfile);
-router.put('/api/student/profile', authMiddleware, updateStudentProfile);
+router.get('/profile', verifySupabaseStudent, getStudentProfile);
+router.get('/api/student/profile', verifySupabaseStudent, getStudentProfile);
+router.put('/profile', verifySupabaseStudent, updateStudentProfile);
+router.put('/api/student/profile', verifySupabaseStudent, updateStudentProfile);
 
 // 3. Education (Protected)
-router.get('/education', authMiddleware, getEducation);
-router.get('/api/student/education', authMiddleware, getEducation);
-router.post('/education', authMiddleware, addEducation);
-router.post('/api/student/education', authMiddleware, addEducation);
-router.put('/education/:id', authMiddleware, updateEducation);
-router.put('/education', authMiddleware, updateEducation);
-router.put('/api/student/education/:id', authMiddleware, updateEducation);
-router.delete('/education/:id', authMiddleware, deleteEducation);
-router.delete('/education', authMiddleware, deleteEducation);
-router.delete('/api/student/education/:id', authMiddleware, deleteEducation);
+router.get('/education', verifySupabaseStudent, getEducation);
+router.get('/api/student/education', verifySupabaseStudent, getEducation);
+router.post('/education', verifySupabaseStudent, addEducation);
+router.post('/api/student/education', verifySupabaseStudent, addEducation);
+router.put('/education/:id', verifySupabaseStudent, updateEducation);
+router.put('/education', verifySupabaseStudent, updateEducation);
+router.put('/api/student/education/:id', verifySupabaseStudent, updateEducation);
+router.delete('/education/:id', verifySupabaseStudent, deleteEducation);
+router.delete('/education', verifySupabaseStudent, deleteEducation);
+router.delete('/api/student/education/:id', verifySupabaseStudent, deleteEducation);
 
 // 4. Skills (Protected)
-router.get('/skills', authMiddleware, getSkills);
-router.get('/api/student/skills', authMiddleware, getSkills);
-router.post('/skills', authMiddleware, addSkill);
-router.post('/api/student/skills', authMiddleware, addSkill);
-router.delete('/skills/:id', authMiddleware, deleteSkill);
-router.delete('/skills', authMiddleware, deleteSkill);
-router.delete('/api/student/skills/:id', authMiddleware, deleteSkill);
+router.get('/skills', verifySupabaseStudent, getSkills);
+router.get('/api/student/skills', verifySupabaseStudent, getSkills);
+router.post('/skills', verifySupabaseStudent, addSkill);
+router.post('/api/student/skills', verifySupabaseStudent, addSkill);
+router.delete('/skills/:id', verifySupabaseStudent, deleteSkill);
+router.delete('/skills', verifySupabaseStudent, deleteSkill);
+router.delete('/api/student/skills/:id', verifySupabaseStudent, deleteSkill);
 
 // 5. Resume (Protected)
-router.post('/resume', authMiddleware, uploadResume);
-router.post('/api/student/resume', authMiddleware, uploadResume);
-router.get('/resume', authMiddleware, getResume);
-router.get('/api/student/resume', authMiddleware, getResume);
+router.post('/resume', verifySupabaseStudent, uploadResume);
+router.post('/api/student/resume', verifySupabaseStudent, uploadResume);
+router.get('/resume', verifySupabaseStudent, getResume);
+router.get('/api/student/resume', verifySupabaseStudent, getResume);
 
 // 6. Certifications (Protected)
-router.get('/certifications', authMiddleware, getCertifications);
-router.get('/api/student/certifications', authMiddleware, getCertifications);
-router.post('/certifications', authMiddleware, addCertification);
-router.post('/api/student/certifications', authMiddleware, addCertification);
-router.delete('/certifications/:id', authMiddleware, deleteCertification);
-router.delete('/certifications', authMiddleware, deleteCertification);
-router.delete('/api/student/certifications/:id', authMiddleware, deleteCertification);
+router.get('/certifications', verifySupabaseStudent, getCertifications);
+router.get('/api/student/certifications', verifySupabaseStudent, getCertifications);
+router.post('/certifications', verifySupabaseStudent, addCertification);
+router.post('/api/student/certifications', verifySupabaseStudent, addCertification);
+router.delete('/certifications/:id', verifySupabaseStudent, deleteCertification);
+router.delete('/certifications', verifySupabaseStudent, deleteCertification);
+router.delete('/api/student/certifications/:id', verifySupabaseStudent, deleteCertification);
 
 // 7. Projects (Protected)
-router.get('/projects', authMiddleware, getProjects);
-router.get('/api/student/projects', authMiddleware, getProjects);
-router.post('/projects', authMiddleware, addProject);
-router.post('/api/student/projects', authMiddleware, addProject);
-router.put('/projects/:id', authMiddleware, updateProject);
-router.put('/projects', authMiddleware, updateProject);
-router.put('/api/student/projects/:id', authMiddleware, updateProject);
-router.delete('/projects/:id', authMiddleware, deleteProject);
-router.delete('/projects', authMiddleware, deleteProject);
-router.delete('/api/student/projects/:id', authMiddleware, deleteProject);
+router.get('/projects', verifySupabaseStudent, getProjects);
+router.get('/api/student/projects', verifySupabaseStudent, getProjects);
+router.post('/projects', verifySupabaseStudent, addProject);
+router.post('/api/student/projects', verifySupabaseStudent, addProject);
+router.put('/projects/:id', verifySupabaseStudent, updateProject);
+router.put('/projects', verifySupabaseStudent, updateProject);
+router.put('/api/student/projects/:id', verifySupabaseStudent, updateProject);
+router.delete('/projects/:id', verifySupabaseStudent, deleteProject);
+router.delete('/projects', verifySupabaseStudent, deleteProject);
+router.delete('/api/student/projects/:id', verifySupabaseStudent, deleteProject);
 
 // 8. Internship Applications (Protected)
-router.get('/internship-applications', authMiddleware, getInternshipApplications);
-router.get('/api/student/internship-applications', authMiddleware, getInternshipApplications);
-router.post('/internship-applications', authMiddleware, applyInternship);
-router.post('/api/student/internship-applications', authMiddleware, applyInternship);
+router.get('/internship-applications', verifySupabaseStudent, getInternshipApplications);
+router.get('/api/student/internship-applications', verifySupabaseStudent, getInternshipApplications);
+router.post('/internship-applications', verifySupabaseStudent, applyInternship);
+router.post('/api/student/internship-applications', verifySupabaseStudent, applyInternship);
 
 // 9. Job Applications (Protected)
-router.get('/job-applications', authMiddleware, getJobApplications);
-router.get('/api/student/job-applications', authMiddleware, getJobApplications);
-router.post('/job-applications', authMiddleware, applyJob);
-router.post('/api/student/job-applications', authMiddleware, applyJob);
+router.get('/job-applications', verifySupabaseStudent, getJobApplications);
+router.get('/api/student/job-applications', verifySupabaseStudent, getJobApplications);
+router.post('/job-applications', verifySupabaseStudent, applyJob);
+router.post('/api/student/job-applications', verifySupabaseStudent, applyJob);
 
 // 10. Saved Opportunities (Protected)
-router.get('/saved-opportunities', authMiddleware, getSavedOpportunities);
-router.get('/api/student/saved-opportunities', authMiddleware, getSavedOpportunities);
-router.post('/saved-opportunities', authMiddleware, saveOpportunity);
-router.post('/api/student/saved-opportunities', authMiddleware, saveOpportunity);
-router.delete('/saved-opportunities/:id', authMiddleware, deleteSavedOpportunity);
-router.delete('/saved-opportunities', authMiddleware, deleteSavedOpportunity);
-router.delete('/api/student/saved-opportunities/:id', authMiddleware, deleteSavedOpportunity);
+router.get('/saved-opportunities', verifySupabaseStudent, getSavedOpportunities);
+router.get('/api/student/saved-opportunities', verifySupabaseStudent, getSavedOpportunities);
+router.post('/saved-opportunities', verifySupabaseStudent, saveOpportunity);
+router.post('/api/student/saved-opportunities', verifySupabaseStudent, saveOpportunity);
+router.delete('/saved-opportunities/:id', verifySupabaseStudent, deleteSavedOpportunity);
+router.delete('/saved-opportunities', verifySupabaseStudent, deleteSavedOpportunity);
+router.delete('/api/student/saved-opportunities/:id', verifySupabaseStudent, deleteSavedOpportunity);
 
 // 11. Notifications (Protected)
-router.get('/notifications', authMiddleware, getNotifications);
-router.get('/api/student/notifications', authMiddleware, getNotifications);
-router.put('/notifications/:id/read', authMiddleware, markNotificationAsRead);
-router.patch('/notifications/:id/read', authMiddleware, markNotificationAsRead);
-router.put('/api/student/notifications/:id/read', authMiddleware, markNotificationAsRead);
-router.patch('/api/student/notifications/:id/read', authMiddleware, markNotificationAsRead);
+router.get('/notifications', verifySupabaseStudent, getNotifications);
+router.get('/api/student/notifications', verifySupabaseStudent, getNotifications);
+router.put('/notifications/:id/read', verifySupabaseStudent, markNotificationAsRead);
+router.patch('/notifications/:id/read', verifySupabaseStudent, markNotificationAsRead);
+router.put('/api/student/notifications/:id/read', verifySupabaseStudent, markNotificationAsRead);
+router.patch('/api/student/notifications/:id/read', verifySupabaseStudent, markNotificationAsRead);
 
 // 12. Placement Stats (Protected)
-router.get('/placement-stats', authMiddleware, getPlacementStats);
-router.get('/api/student/placement-stats', authMiddleware, getPlacementStats);
+router.get('/placement-stats', verifySupabaseStudent, getPlacementStats);
+router.get('/api/student/placement-stats', verifySupabaseStudent, getPlacementStats);
 
 // Dashboard (Protected)
-router.get('/dashboard', authMiddleware, getStudentDashboard);
-router.get('/api/student/dashboard', authMiddleware, getStudentDashboard);
+router.get('/dashboard', verifySupabaseStudent, getStudentDashboard);
+router.get('/api/student/dashboard', verifySupabaseStudent, getStudentDashboard);
 
 // Attach handlers for unit testing
 router.loginStudent = loginStudent;

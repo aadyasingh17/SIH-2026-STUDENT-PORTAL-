@@ -294,3 +294,43 @@ footer p {
   font-size: 0.85rem; 
   color: var(--qz-text-muted); 
 }
+
+/* ===== COMING SOON OVERLAY ===== */
+.coming-soon-wrapper {
+  position: relative;
+}
+.coming-soon-wrapper > *:not(.coming-soon-badge) {
+  filter: blur(3px);
+  pointer-events: none;
+  user-select: none;
+}
+.coming-soon-badge {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  background: rgba(10, 15, 12, 0.55);
+  border-radius: var(--radius-md);
+  text-align: center;
+  padding: 20px;
+}
+.coming-soon-badge .tag {
+  background: var(--qz-primary);
+  color: #05130a;
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+.coming-soon-badge p {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  max-width: 320px;
+}

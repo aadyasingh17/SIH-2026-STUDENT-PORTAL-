@@ -58,7 +58,7 @@
               <h3 style="font-size: 1.25rem; font-weight: 800; margin: 12px 0 8px;">Student Workspace</h3>
               <p style="font-size: 0.9rem; color: var(--qz-text-muted); line-height: 1.5;">Access verified profile, academic records, certifications, resume engine, and live campus opportunities.</p>
             </div>
-            <button class="btn btn-primary" style="margin-top: 20px; width: 100%;" onclick="navigateTo('view-student')">Enter Student Portal &rarr;</button>
+              <button class="btn btn-primary" style="margin-top: 20px; width: 100%;" onclick="enterPortal('student')">Enter Student Portal &rarr;</button>
           </div>
 
           <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
@@ -67,7 +67,7 @@
               <h3 style="font-size: 1.25rem; font-weight: 800; margin: 12px 0 8px;">College Admin (TPO)</h3>
               <p style="font-size: 0.9rem; color: var(--qz-text-muted); line-height: 1.5;">Monitor student cohort readiness, NIRF compliance metrics, inject bridge courses, and coordinate placement drives.</p>
             </div>
-            <a href="College Admin.html" class="btn btn-primary" style="margin-top: 20px; width: 100%; text-decoration: none;">Launch College Portal &rarr;</a>
+              <button class="btn btn-primary" style="margin-top: 20px; width: 100%;" onclick="enterPortal('college')">Launch College Portal &rarr;</button>
           </div>
 
           <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
@@ -76,7 +76,7 @@
               <h3 style="font-size: 1.25rem; font-weight: 800; margin: 12px 0 8px;">Corporate Recruiter Hub</h3>
               <p style="font-size: 0.9rem; color: var(--qz-text-muted); line-height: 1.5;">Query verified student skill talent, publish new job and internship requisitions, and schedule live candidate interviews.</p>
             </div>
-            <a href="Recruiter.html" class="btn btn-primary" style="margin-top: 20px; width: 100%; text-decoration: none;">Launch Recruiter Hub &rarr;</a>
+              <button class="btn btn-primary" style="margin-top: 20px; width: 100%;" onclick="enterPortal('company')">Launch Recruiter Hub &rarr;</button>
           </div>
         </div>
       </div>
@@ -276,8 +276,7 @@
             <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
               <div>
                 <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--qz-text-main); margin-bottom: 4px;">Student Dashboard</h1>
-                <p style="color: var(--qz-text-muted); font-size: 0.95rem;">System generated overview for Aarav Sharma.</p>
-              </div>
+<p style="color: var(--qz-text-muted); font-size: 0.95rem;">System generated overview for <span id="dash-subtitle-name">Aarav Sharma</span>.</p>              </div>
               <button class="btn btn-outline">Download Report PDF</button>
             </div>
 
@@ -1085,7 +1084,7 @@
           <div id="welcome-screen" class="tab-content default-tab hero-layout">
             <div class="hero-content">
               <h1 style="font-size: 4rem; font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -0.03em;">
-                Welcome back,<br><span style="color: var(--qz-primary);">Aarav</span>
+                Welcome back,<br><span id="welcome-name" style="color: var(--qz-primary);">Aarav</span>
               </h1>
               <div style="color: var(--qz-primary); font-size: 1.1rem; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 24px;">
                 THE FUTURE ISN'T MINIMAL. IT'S SYSTEMATIC.
@@ -1589,5 +1588,6 @@
   <!-- External JavaScript Router & App Logic -->
   <script src="js/app.js"></script>
   <script src="js/collegeDashboard.js"></script>
+  <script src="js/studentDashboard.js"></script>
 </body>
 </html>

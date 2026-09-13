@@ -436,6 +436,39 @@ async function handleLogout() {
   }
 }
 
+// Gate portal access behind login/signup — no direct entry without auth
+async function enterPortal(role) {
+  // College uses its own JWT (localStorage), not Supabase Auth
+  if (role === 'college') {
+    if (getCollegeToken()) {
+      window.location.href = 'College Admin.html';
+      return;
+    }
+    setRole('college', 'signup');
+    openModal('signup-modal');
+    return;
+  }
+
+  // Student & Company use Supabase Auth session
+  if (window.supabaseClient) {
+    const { data: { session } } = await window.supabaseClient.auth.getSession();
+    const sessionRole = session?.user?.user_metadata?.role;
+
+    if (session && sessionRole === role) {
+      if (role === 'student') {
+        routeByRole('student');
+      } else if (role === 'company') {
+        window.location.href = 'Recruiter.html';
+      }
+      return;
+    }
+  }
+
+  // Not logged in (or wrong role) — force signup with role pre-selected
+  setRole(role, 'signup');
+  openModal('signup-modal');
+}
+
 // Navigation helper based on role
 function routeByRole(role) {
   if (role === 'college') {
@@ -447,6 +480,9 @@ function routeByRole(role) {
     navigateTo('view-company');
   } else {
     navigateTo('view-student');
+    if (typeof loadStudentDashboardPage === 'function') {
+      loadStudentDashboardPage();
+    }
   }
 }
 
