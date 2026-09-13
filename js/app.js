@@ -1,4 +1,73 @@
 // =========================================================
+// COLLEGE BACKEND API CONFIG (Express + JWT)
+// =========================================================
+const API_BASE = 'http://localhost:5000/api';
+
+function getCollegeToken() {
+  return localStorage.getItem('college_token');
+}
+
+function getCollegeData() {
+  const raw = localStorage.getItem('college_data');
+  return raw ? JSON.parse(raw) : null;
+}
+
+function setCollegeSession(token, college) {
+  if (token) localStorage.setItem('college_token', token);
+  if (college) localStorage.setItem('college_data', JSON.stringify(college));
+}
+
+function clearCollegeSession() {
+  localStorage.removeItem('college_token');
+  localStorage.removeItem('college_data');
+}
+
+async function collegeApiFetch(endpoint, options = {}) {
+  const token = getCollegeToken();
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(options.headers || {})
+  };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_BASE}${endpoint}`, {
+    ...options,
+    headers
+  });
+
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    data = null;
+  }
+
+  if (!response.ok) {
+    const message = (data && data.message) || `Request failed with status ${response.status}`;
+    throw new Error(message);
+  }
+
+  return data;
+}
+
+function goToDashboard() {
+  if (getCollegeToken()) {
+    routeByRole('college');
+    return;
+  }
+  if (window.supabaseClient) {
+    window.supabaseClient.auth.getSession().then(({ data: { session } }) => {
+      const role = session?.user?.user_metadata?.role || 'student';
+      routeByRole(role);
+    });
+  } else {
+    routeByRole('student');
+  }
+}
+
+// =========================================================
 // APPLICATION ROUTER & MODAL LOGIC
 // =========================================================
 
@@ -109,6 +178,10 @@ async function handleSignup(event) {
   clearAuthMessage('signup-error');
   clearAuthMessage('signup-info');
 
+  if (currentRole === 'college') {
+    return handleCollegeSignup();
+  }
+
   const nameInput = document.getElementById('signup-name-input');
   const emailInput = document.getElementById('signup-email');
   const passwordInput = document.getElementById('signup-password');
@@ -182,12 +255,64 @@ async function handleSignup(event) {
   }
 }
 
+async function handleCollegeSignup() {
+  const nameInput = document.getElementById('signup-name-input');
+  const emailInput = document.getElementById('signup-email');
+  const passwordInput = document.getElementById('signup-password');
+  const submitBtn = document.getElementById('signup-submit-btn');
+
+  const name = nameInput ? nameInput.value.trim() : '';
+  const email = emailInput ? emailInput.value.trim() : '';
+  const password = passwordInput ? passwordInput.value : '';
+
+  if (!email || !password) {
+    showAuthMessage('signup-error', 'Please enter your email and password.');
+    return;
+  }
+  if (password.length < 6) {
+    showAuthMessage('signup-error', 'Password must be at least 6 characters long.');
+    return;
+  }
+
+  const originalBtnText = submitBtn ? submitBtn.innerText : 'Sign Up';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerText = 'Creating account...';
+  }
+
+  try {
+    const data = await collegeApiFetch('/college/signup', {
+      method: 'POST',
+      body: JSON.stringify({ name, email, password })
+    });
+
+    setCollegeSession(data.token, data.college);
+    closeModal('signup-modal');
+    const form = document.getElementById('signup-form');
+    if (form) form.reset();
+    updateAuthStateUI({ user: { email: data.college.email, user_metadata: { full_name: data.college.name } } });
+    routeByRole('college');
+  } catch (err) {
+    console.error('College signup exception:', err);
+    showAuthMessage('signup-error', err.message || 'An unexpected error occurred during signup.');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerText = originalBtnText;
+    }
+  }
+}
+
 // Student & User Login
 async function handleLogin(event) {
   if (event) event.preventDefault();
 
   clearAuthMessage('login-error');
   clearAuthMessage('login-info');
+
+  if (currentRole === 'college') {
+    return handleCollegeLogin();
+  }
 
   const emailInput = document.getElementById('login-email');
   const passwordInput = document.getElementById('login-password');
@@ -241,8 +366,57 @@ async function handleLogin(event) {
   }
 }
 
+async function handleCollegeLogin() {
+  const emailInput = document.getElementById('login-email');
+  const passwordInput = document.getElementById('login-password');
+  const submitBtn = document.getElementById('login-submit-btn');
+
+  const email = emailInput ? emailInput.value.trim() : '';
+  const password = passwordInput ? passwordInput.value : '';
+
+  if (!email || !password) {
+    showAuthMessage('login-error', 'Please enter your email and password.');
+    return;
+  }
+
+  const originalBtnText = submitBtn ? submitBtn.innerText : 'Log In';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerText = 'Logging in...';
+  }
+
+  try {
+    const data = await collegeApiFetch('/college/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password })
+    });
+
+    setCollegeSession(data.token, data.college);
+    closeModal('login-modal');
+    const form = document.getElementById('login-form');
+    if (form) form.reset();
+    updateAuthStateUI({ user: { email: data.college.email, user_metadata: { full_name: data.college.name } } });
+    routeByRole('college');
+  } catch (err) {
+    console.error('College login exception:', err);
+    showAuthMessage('login-error', err.message || 'Invalid email or password.');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerText = originalBtnText;
+    }
+  }
+}
+
 // Logout
 async function handleLogout() {
+  if (getCollegeToken()) {
+    clearCollegeSession();
+    updateAuthStateUI(null);
+    navigateTo('view-home');
+    return;
+  }
+
   if (!window.supabaseClient) {
     updateAuthStateUI(null);
     navigateTo('view-home');
@@ -266,6 +440,9 @@ async function handleLogout() {
 function routeByRole(role) {
   if (role === 'college') {
     navigateTo('view-college');
+    if (typeof loadCollegeDashboardPage === 'function') {
+      loadCollegeDashboardPage();
+    }
   } else if (role === 'company') {
     navigateTo('view-company');
   } else {
