@@ -5,6 +5,7 @@ const collegeStudentsRoutes = require('../../routes/collegeStudents');
 const collegeDrivesRoutes = require('../../routes/collegeDrives');
 const collegeDashboardRoutes = require('../../routes/collegeDashboard');
 const studentRoutes = require('../../routes/student');
+
 const router = express.Router();
 
 // Mount individual route modules
