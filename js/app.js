@@ -1,7 +1,7 @@
 // =========================================================
 // COLLEGE BACKEND API CONFIG (Express + JWT)
 // =========================================================
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = 'https://sih-2026-student-portal.onrender.com/api';
 
 function getCollegeToken() {
   return localStorage.getItem('college_token');
